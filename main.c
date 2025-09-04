@@ -1,23 +1,37 @@
-#define F_CPU 4915200UL
+
+//#define F_CPU 4915200UL
+
 #include "util/delay.h"
 #include "avr/io.h"
 
+#define FOSC 1843200// Clock Speed
+#define BAUD 9600
+#define MYUBRR FOSC/16/BAUD-1
 
 
 
 int main() {
 
-    //input
-    DDRC |= (1 << PC6);
+    //output
+    DDRD |= (1 << PD2);
 
+    USART_Init ( MYUBRR );
+    
     while(1) {
+
+        USART_Transmit('a' );
+        
+         _delay_ms(2000);
+
         // toggle
-        PORTC ^= (1 << PC6);
+        //PORTD ^= (1 << PD2);
 
-
-        _delay_ms(200);
-
-    };
+    
+        unsigned char c = USART_Receive();
+          
+       };
+       
 
     return 0;
 };
+
