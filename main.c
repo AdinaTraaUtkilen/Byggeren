@@ -1,63 +1,52 @@
 
 #define F_CPU 4915200UL
-#define external_mem_baseadress 0x1800
-
 
 #include "avr/io.h"
 #include "util/delay.h"
-#include "uart.h"
 #include "stdio.h"
-
-
+#include "uart.h"
+#include "sram.h"
 
 #define BAUD 9600
-#define MYUBRR F_CPU/16/BAUD-1
+#define MYUBRR F_CPU / 16 / BAUD - 1
 
+int main()
+{
+  USART_Init(MYUBRR);
 
+  // manuell latch test, styrer pinnene direkte utifra høy/ lav latch oving 2
 
+  // setter som output
+  // DDRD |= (1 << PD2);
+  // DDRE |= (1 << PE1); // PE til LE, latch enable PE1 = ALE!!!
+  // DDRA |= 0xFF;         // pa0 til pa7 til latch
 
-int main() {
+  // PORTE &= ~(1 << PE1); // holde le lav, holder Q
 
-    //output
-    DDRD |= (1 << PD2);
-    DDRE |= (1 << PE1);
+  // PORTA = 0b01010101;
+  // PORTE |= (1 << PE1);  // LE høy, sende gjennom
+  // PORTE &= ~(1 << PE1); // Le lav, låse verdien
 
-    USART_Init ( MYUBRR );
+  // PORTA = 0b10101010; // D endres, Q uendret
 
-    MCUCR |= (1 << SRE);
+  // ekstern minne tar over
 
-    volatile uint8_t *ext_mem = (uint8_t *) external_mem_baseadress;
-    PORTE = 0b10; //
-    PORTA = 0x55;
+  xmem_init();
+  SRAM_test();
 
-    
-    while(1) {
-        
-        //*ext_mem = 0x55; // 0101 0101
-      
-        
+  // toggle oving 1 - uart
+  // while (1)
+  // {
+  // ext_mem[1200] = 0x55; // 0101 0101,
+  // _delay_ms(1500);
 
-       // *(ext_mem + 1) = 0xAA; // 1010 1010
-       // _delay_ms(500);
+  //  PORTD ^= (1 << PD2);
 
+  // unsigned char c = USART_Receive();
+  // USART_Transmit(c);
 
-        // toggle
-      //  PORTD ^= (1 << PD2);
+  // printf("Test");
+  //};
 
-    
-       // unsigned char c = USART_Receive();
-       // USART_Transmit(c);
-
-     //   printf("Test");
-
-        
-
-        
-
-          
-       };
-       
-
-    return 0;
+  return 0;
 };
-
