@@ -5,9 +5,10 @@ void xmem_init() // from lab lecture
 {
     MCUCR |= (1 << SRE); // enable external memory (XMEM)
 
-    SFIOR |= (1 << XMM2); // maskin out pins used for jtag PC4 - PC7
-    SFIOR |= (0 << XMM1); //
-    SFIOR |= (0 << XMM0);
+    SFIOR |= (1 << XMM2); // masking out pins used for jtag PC4 - PC7
+
+   //SFIOR |= (0 << XMM1); //
+   // SFIOR |= (0 << XMM0);
 }
 
 void xmem_write(uint8_t data, uint16_t addr)
