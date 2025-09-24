@@ -12,7 +12,7 @@ typedef struct {
 
 void adc_init(void);
 
-volatile uint8_t adc_read(uint8_t channel);
+volatile uint8_t adc_read();
 
 void pos_calibrate();
  
