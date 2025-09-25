@@ -4,10 +4,6 @@
 volatile uint8_t *ADC_BASE = (uint8_t*)0x1400; //baseadresse ADC
 
 void adc_init(void){
-    MCUCR |= (1 << SRE); // enable external memory (XMEM)
-
-    SFIOR |= (1 << XMM2); // masking out pins used for jtag PC4 - PC7
-
     // klokke output OC1A 
     DDRD |= (1 << PD5);
 
@@ -49,11 +45,12 @@ void pos_calibrate(uint8_t *jx, uint8_t* jy, uint8_t* tx, uint8_t* ty, pos_t *po
 }
 
 
-void pos_read(pos_t pos){
+void pos_read(pos_t pos, dir*  d){
     printf("joystick x: %d\r\n", pos.joystick_x);
     printf("joystick y: %d\r\n", pos.joystick_y);
     printf("touchpad x: %d\r\n", pos.touchpad_x);
     printf("touchpad y: %d\r\n", pos.touchpad_y);
+    printf("direction joystick %s \r\n", dir_str(*d));
 
 };
 

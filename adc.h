@@ -19,7 +19,7 @@ void adc_read(uint8_t* jx, uint8_t* jy, uint8_t* tx, uint8_t* ty);
 
 void pos_calibrate(uint8_t* jx, uint8_t* jy, uint8_t* tx, uint8_t* ty, pos_t *pos);
  
-void pos_read(pos_t pos);
+void pos_read(pos_t pos, dir* d);
 
 void pos_direction(pos_t *pos, dir *d);
 

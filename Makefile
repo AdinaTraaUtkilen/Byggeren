@@ -1,5 +1,5 @@
 # List all source files to be compiled; separate with space
-SOURCE_FILES := main.c uart.c sram.c adc.c
+SOURCE_FILES := main.c uart.c sram.c adc.c spi.c
 
 
 # CPU clock (for _delay_ms etc.)

@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "io.h": "c",
-        "uart.h": "c"
+        "uart.h": "c",
+        "labtester.h": "c"
     }
 }
