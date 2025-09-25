@@ -18,36 +18,85 @@ void adc_init(void){
    // 0.8192 mHz Mhz: 4.9 / 2*1 + (1+2)
 
     // min 0.5 mhz og maks 5mhz
-    DDRD &= ~(1 << PD2); // PD2 som inngang for busy, sjekke når den blir aktiv høy
-
-
+  
 }
 
 
-volatile uint8_t adc_read(){
+void adc_read(uint8_t* jx, uint8_t* jy, uint8_t* tx, uint8_t* ty){
     ADC_BASE[0] = 0; //cs og write lav
     
+   DDRD &= ~(1 << PD2); // PD2 som inngang for busy, sjekke når den blir aktiv høy
    while(!(PIND & (1 << PD2))){ //vente til busy ferdig. page 15 in adc datasheet
     ;
+    printf("busy \r\n");
    };
-   
 
-  // _delay_ms(200);
+    *jx = ADC_BASE[0]; // leser posisjon fra adc med 4 channels
+    *jy = ADC_BASE[0];
+    *tx = ADC_BASE[0];
+    *ty = ADC_BASE[0];
 
 
-    volatile uint16_t value_x = ADC_BASE[0]; // leser fra adc med 4 channels
-    volatile uint16_t value_y = ADC_BASE[0];
-    volatile uint16_t value3 = ADC_BASE[0];
-    volatile uint16_t value4 = ADC_BASE[0];
-    return value_x;
+}
+
+void pos_calibrate(uint8_t *jx, uint8_t* jy, uint8_t* tx, uint8_t* ty, pos_t *pos){
     
+    pos->joystick_x =  (*jx - 160) * (100/90) ;
+    pos->joystick_y = (*jy - 160) * (100/90);
+    pos->touchpad_x = (*tx - 127.5) * (100/127.5);
+    pos->touchpad_y = (*ty - 127.5) * (100/127.5);
+
 }
 
-void pos_calibrate(){
 
+void pos_read(pos_t pos){
+    printf("joystick x: %d\r\n", pos.joystick_x);
+    printf("joystick y: %d\r\n", pos.joystick_y);
+    printf("touchpad x: %d\r\n", pos.touchpad_x);
+    printf("touchpad y: %d\r\n", pos.touchpad_y);
+
+};
+
+
+void pos_direction(pos_t *pos, dir *d) {
+    int d_x = pos -> joystick_x;
+    int d_y = pos -> joystick_y;
+    if (abs(d_y) >= abs(d_x))
+    {
+        if (pos->joystick_y == 0){
+        *d = NEUTRAL;
+    } else if (pos->joystick_y < 0){
+        *d = DOWN;
+    } else if (pos->joystick_y > 0){
+        *d = UP;
+    }
+}else {
+    if (pos->joystick_x < 0){
+        *d = LEFT;
+    } else if(pos->joystick_x > 0) {
+        *d = RIGHT;
+    } else if (pos->joystick_x == 0){
+        *d = NEUTRAL;
+    }
+}
 }
 
 
-pos_t pos_read(void);
-
+char *dir_str(dir d){
+    switch (d)
+        {
+        case LEFT:
+            return "left";
+        case RIGHT:
+            return "right";
+        case UP:
+            return "up";
+        case DOWN:
+            return "down";
+        case NEUTRAL:
+            return "neutral";
+        default:
+            return "unknown";
+}
+}
 

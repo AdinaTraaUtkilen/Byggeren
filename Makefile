@@ -1,6 +1,11 @@
 # List all source files to be compiled; separate with space
 SOURCE_FILES := main.c uart.c sram.c adc.c
 
+
+# CPU clock (for _delay_ms etc.)
+F_CPU_HZ := 4915200
+
+
 # Set this flag to "yes" (no quotes) to use JTAG; otherwise ISP (SPI) is used
 PROGRAM_WITH_JTAG := yes
 

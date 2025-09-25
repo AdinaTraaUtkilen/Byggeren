@@ -20,18 +20,25 @@ int main()
   // adc og joystick oving 3 - oppg. 3
 
  adc_init();
+  pos_t pos;
+  uint8_t jx, jy, tx, ty;
+  dir d = NEUTRAL;
+
+
  while (1)
  {
-   
-    printf("Lese verdi: %d\n", adc_read());
-    _delay_ms(500);
+  
+  adc_read(&jx, &jy, &tx, &ty);
+  pos_calibrate(&jx, &jy, &tx, &ty, &pos);
+  pos_read(pos);
+  
+  pos_direction(&pos, &d);
 
+
+  printf("direction joystick %s \r\n", dir_str(d));
+  _delay_ms(1000);
 
  }
- 
-
-  
-
 
   return 0;
 };

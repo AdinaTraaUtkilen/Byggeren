@@ -1,37 +1,24 @@
+#include <stdlib.h>
+#include "labtester.h"
 
+/* exercise 1 */
+void test_uart(){
+  volatile uint32_t *ext_mem = (volatile uint32_t*) external_mem_baseadress;
+  ext_mem[1200] = 0x55; // 0101 0101,
+  _delay_ms(1500);
 
+  PORTD ^= (1 << PD2);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// --------------------------------- oving 1 - uart ------------------------------
-
-    // toggle
-    /*
-   while (1)
-   {
-  // ext_mem[1200] = 0x55; // 0101 0101,
-   _delay_ms(1500);
-
-  //  PORTD ^= (1 << PD2);
-
-  // unsigned char c = USART_Receive();
-  // USART_Transmit(c);
+  unsigned char c = USART_Receive();
+  USART_Transmit(c);
 
     printf("Test");
-  };
-  */
+
+}
+
+
+
+
 
 
 
