@@ -61,7 +61,7 @@
 // --------------------------  oving 2 - oppg. 2---------------------------------------
   // ekstern minne tar over 
 
- 
+ //  SRAM_test();
 
   // sram og adc oving 2 - oppg. 4
 

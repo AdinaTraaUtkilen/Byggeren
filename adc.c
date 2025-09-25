@@ -18,7 +18,7 @@ void adc_init(void){
    // 0.8192 mHz Mhz: 4.9 / 2*1 + (1+2)
 
     // min 0.5 mhz og maks 5mhz
-    DDRD &= ~(0 << PD2); // PD2 som inngang for busy, sjekke når den blir aktiv høy
+    DDRD &= ~(1 << PD2); // PD2 som inngang for busy, sjekke når den blir aktiv høy
 
 
 }
@@ -27,16 +27,19 @@ void adc_init(void){
 volatile uint8_t adc_read(){
     ADC_BASE[0] = 0; //cs og write lav
     
-   while(!(PIND & (1 << PD2))){
+   while(!(PIND & (1 << PD2))){ //vente til busy ferdig. page 15 in adc datasheet
     ;
    };
+   
+
+  // _delay_ms(200);
 
 
-    uint8_t value = ADC_BASE[0]; // leser fra adc
-    uint8_t value2 = ADC_BASE[0];
-    uint8_t value3 = ADC_BASE[0];
-    uint8_t value3 = ADC_BASE[0];
-    return value;
+    volatile uint16_t value_x = ADC_BASE[0]; // leser fra adc med 4 channels
+    volatile uint16_t value_y = ADC_BASE[0];
+    volatile uint16_t value3 = ADC_BASE[0];
+    volatile uint16_t value4 = ADC_BASE[0];
+    return value_x;
     
 }
 

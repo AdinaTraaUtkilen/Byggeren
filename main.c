@@ -15,7 +15,7 @@ int main()
 {
   USART_Init(MYUBRR);
   xmem_init();
-//  SRAM_test();
+
 
   // adc og joystick oving 3 - oppg. 3
 
@@ -35,5 +35,3 @@ int main()
 
   return 0;
 };
-
-void ex1_toggle();
