@@ -20,7 +20,7 @@ void spi_master_init(){
 
 
 void spi_slave_init(){
-    /*Set MOSI, all others input*/
+    /*Set MOSI til output, all others input*/
     DDRB = (1 << DDB5);
 
     /*Enable SPI */
@@ -29,17 +29,20 @@ void spi_slave_init(){
   
 }
 
-void SPI_MasterTransmit(char cData){
+void spi_master_transmit(char cData){
     /*Start transmission*/
     SPDR = cData;
 
     /*Wait for transmission complete*/
-    while(!(SPSR & (1<<SPIF)));
+    while(!(SPSR & (1<<SPIF))){
+        (void)SPDR;
+    };
+
 }
 
 
 
-char SPI_SlaveReceive(void){
+char spi_slave_receive(void){
     /*Wait for reception complete */
     while(!(SPSR & (1 << SPIF)));
 
