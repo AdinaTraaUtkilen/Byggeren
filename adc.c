@@ -18,6 +18,8 @@ void adc_init(void){
 }
 
 
+
+/* Polling
 void adc_read(uint8_t* jx, uint8_t* jy, uint8_t* tx, uint8_t* ty){
     ADC_BASE[0] = 0; //cs og write lav
     
@@ -31,25 +33,43 @@ void adc_read(uint8_t* jx, uint8_t* jy, uint8_t* tx, uint8_t* ty){
     *jy = ADC_BASE[0];
     *tx = ADC_BASE[0];
     *ty = ADC_BASE[0];
+}
+*/
 
+void adc_read_init(){
+    ADC_BASE[0] = 0; //cs og write lav
+}
 
+void adc_read(uint8_t* jx, uint8_t* jy, uint8_t* tx, uint8_t* ty){
+
+    *jx = ADC_BASE[0]; // leser posisjon fra adc med 4 channels
+    *jy = ADC_BASE[0];
+    *tx = ADC_BASE[0];
+    *ty = ADC_BASE[0];
 }
 
 void pos_calibrate(uint8_t *jx, uint8_t* jy, uint8_t* tx, uint8_t* ty, pos_t *pos){
     
-    pos->joystick_x =  (*jx - 160) * (100/90) ;
-    pos->joystick_y = (*jy - 160) * (100/90);
-    pos->touchpad_x = (*tx - 127.5) * (100/127.5);
-    pos->touchpad_y = (*ty - 127.5) * (100/127.5);
+    // center values: tweak to your hardware
+    int16_t jx_raw = (int16_t)(*jx) - 160;
+    int16_t jy_raw = (int16_t)(*jy) - 160;
+    int16_t tx_raw = (int16_t)(*tx) - 128;
+    int16_t ty_raw = (int16_t)(*ty) - 128;
+
+    // scale to roughly -100..100
+    pos->joystick_x = (int8_t)( jx_raw * 100 / 90 );
+    pos->joystick_y = (int8_t)( jy_raw * 100 / 90 );
+    pos->touchpad_x = (int8_t)( tx_raw * 100 / 128 );
+    pos->touchpad_y = (int8_t)( ty_raw * 100 / 128 );
 
 }
 
 
-void pos_read(pos_t pos, dir*  d){
-    printf("joystick x: %d\r\n", pos.joystick_x);
-    printf("joystick y: %d\r\n", pos.joystick_y);
-    printf("touchpad x: %d\r\n", pos.touchpad_x);
-    printf("touchpad y: %d\r\n", pos.touchpad_y);
+void pos_read(pos_t *pos, dir*  d){
+    printf("joystick x: %d\r\n", pos->joystick_x);
+    printf("joystick y: %d\r\n", pos->joystick_y);
+    printf("touchpad x: %d\r\n", pos->touchpad_x);
+    printf("touchpad y: %d\r\n", pos->touchpad_y);
     printf("direction joystick %s \r\n", dir_str(*d));
 
 };
@@ -79,7 +99,7 @@ void pos_direction(pos_t *pos, dir *d) {
 }
 
 
-char *dir_str(dir d){
+const char *dir_str(dir d){
     switch (d)
         {
         case LEFT:
