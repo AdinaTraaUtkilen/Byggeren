@@ -52,6 +52,10 @@ void sram_test_func(){ // ekstern minne tar over
 
 // --------------------------  oving 3---------------------------------------
 void position_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty,pos_t *pos, dir *d){ 
+  adc_read_init();
+    if(control_flag){
+      control_flag = 0; // clear flagg
+    }
 
   /*Inni while*/
     adc_read(jx, jy, tx, ty);
@@ -63,12 +67,48 @@ void position_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty,pos_t *pos, d
 
 
 
+// --------------------------  oving 4---------------------------------------
+void spi_test(){
+  spi_activate_disp_cs();
+  spi_master_transmit(0xAA); //dummy
+  _delay_ms(200);
+
+  volatile uint8_t trash; // nullstille flagget
+  trash = SPSR;
+  trash = SPDR;
+}
 
 
+void led_test(){
+   led_on(0);
+  _delay_us(40);
+  led_on(1);
+  _delay_us(40);
+  led_on(2);
+  _delay_us(40);
+  led_on(3);
+  _delay_us(40);
+  led_on(4);
+  _delay_us(40);
+  led_on(5);
+  _delay_us(40);
 
 
+    led_off(0);
+  _delay_us(40);
+  led_off(1);
+  _delay_us(40);
+  led_off(2);
+  _delay_us(40);
+  led_off(3);
+  _delay_us(40);
+  led_off(4);
+  _delay_us(40);
+  led_off(5);
+  _delay_us(40);
+    
 
-
+}
 
 
 

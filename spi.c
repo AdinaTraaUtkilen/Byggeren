@@ -64,7 +64,17 @@ void spi_activate_io_cs(){
 
 }
 
-void spi_deactivate_all(void){
+void spi_deactivate_all(){
     PORTD |= (1 << PD3);
     PORTD |= (1 << PD4);
+}
+
+void spi_cd_command(){
+    PORTE &= ~(1 << PE2);
+
+}
+
+
+void spi_cd_data(){
+    PORTE = (1 << PE2);
 }

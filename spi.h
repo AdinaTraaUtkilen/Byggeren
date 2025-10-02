@@ -19,3 +19,7 @@ void spi_activate_disp_cs();
 void spi_activate_io_cs();
 
 void spi_deactivate_all(void);
+
+void spi_cd_command();
+
+void spi_cd_data();
