@@ -72,9 +72,12 @@ void spi_deactivate_all(){
 void spi_cd_command(){
     PORTE &= ~(1 << PE2);
 
+    DDRE |= (1 << PE2);
+
 }
 
 
 void spi_cd_data(){
-    PORTE = (1 << PE2);
+    PORTE |= (1 << PE2);
+    DDRE |= (1 << PE2);
 }

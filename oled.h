@@ -26,6 +26,8 @@ void oled_goto_column(uint8_t column);
 
 void oled_clear_page(uint8_t page);
 
+void oled_clear_all();
+
 /*
 void oled_pos(uint8_t row, uint8_t column);
 

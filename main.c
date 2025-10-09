@@ -43,7 +43,8 @@ int main()
  while (1)
  {  
 
-  //  led_test();
+    printf("hei");
+    led_test();
 
 
   _delay_ms(1000);
