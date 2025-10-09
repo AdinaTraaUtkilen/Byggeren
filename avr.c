@@ -28,3 +28,21 @@ void led_init(){
     }
 
 }
+/*
+void read_joystick(pos_t *pos){
+    spi_activate_io_cs();
+    spi_master_transmit(0x03);
+    _delay_us(40);
+    uint8_t xpos = spi_master_transmit(0x00);
+    _delay_us(2);
+    uint8_t ypos = spi_master_transmit(0x00);
+    _delay_us(2);
+    uint8_t BTN = spi_master_transmit(0x00);
+    spi_deactivate_all();
+    
+    pos->x = (int8_t)xpos;
+    pos->y = (int8_t)ypos;
+    out->btn = BTN;
+
+}
+*/

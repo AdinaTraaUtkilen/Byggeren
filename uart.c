@@ -37,4 +37,3 @@ char USART_Receive( void )
 /* Get and return received data from buffer */
     return UDR0;
 }
-

@@ -2,18 +2,19 @@
 #define adc_baseadress 0x1400
 
 #include "avr/io.h"
-#include "util/delay.h"
 #include "stdio.h"
 #include "global.h"
 
 
 void adc_init(void);
 void adc_read_init();
-void adc_read(uint8_t* jx, uint8_t* jy, uint8_t* tx, uint8_t* ty);
+void adc_read(volatile uint8_t* jx,volatile uint8_t* jy,volatile uint8_t* tx,volatile uint8_t* ty);
 
-void pos_calibrate(uint8_t* jx, uint8_t* jy, uint8_t* tx, uint8_t* ty, pos_t *pos);
+void pos_calibrate(volatile uint8_t* jx,volatile uint8_t* jy,volatile uint8_t* tx,volatile uint8_t* ty, volatile pos_t *pos);
  
-void pos_read(pos_t *pos, dir* d);
+void pos_read(volatile pos_t *pos, dir* d);
 
-void pos_direction(pos_t *pos, dir *d);
+void pos_direction(volatile pos_t *pos, dir *d);
 
+
+const char *dir_str(dir d);

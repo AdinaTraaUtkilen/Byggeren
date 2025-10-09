@@ -12,7 +12,6 @@
 #include "interrupt.h"
 #include "global.h"
 #include "avr.h"
-#include "fonts.h"
 
 #define BAUD 9600
 #define MYUBRR F_CPU / 16 / BAUD - 1
@@ -23,7 +22,7 @@ volatile pos_t pos;
 volatile dir d = NEUTRAL;
 volatile uint8_t control_flag = 0;
 volatile Buttons btn;
-
+volatile homescreen_menu m = PLAY;
 
 int main()
 {
@@ -35,19 +34,12 @@ int main()
   led_init(); 
   oled_init();
 
-  oled_clear_all();
- 
-
-  oled_print_arrow();
-
-
  while (1)
  {  
+ 
 
-    led_test();
-
-
-  _delay_ms(1000);
+  oled_home(&d, &m);
+  _delay_ms(100);
 
  }
 

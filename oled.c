@@ -1,4 +1,8 @@
 #include "oled.h"
+#include "fonts.h"
+#include <string.h>
+#include "global.h"
+
 
 //128 x 64 dot matrix panel
 
@@ -21,6 +25,8 @@ void oled_init(){
     oled_write_command(0x40); // startline med offset lik 0
 
     oled_write_command(0xAF); // display on
+
+    oled_clear_all();
  
 }
 
@@ -41,13 +47,13 @@ void oled_write_command(char data){
 
 }; 
 
-void oled_print_arrow ( )
+void oled_print_arrow (uint8_t page, uint8_t column )
 {
-    oled_pos(0, 123);
+    oled_pos(page, column);
     oled_write_data (0b00011000) ;
-    oled_write_data (0b00011000) ;
-    oled_write_data (0b01111110) ;
     oled_write_data (0b00111100) ;
+    oled_write_data (0b01111110) ;
+    oled_write_data (0b00011000) ;
     oled_write_data (0b00011000) ;
 }
 
@@ -93,8 +99,7 @@ void oled_clear_column(uint8_t column){
         oled_goto_column(column);
         oled_write_data(0x00);
     }
-
-};
+}
 
 void oled_pos(uint8_t page, uint8_t column){
     oled_goto_page(page);
@@ -102,23 +107,116 @@ void oled_pos(uint8_t page, uint8_t column){
 }
 
 
-void oled_print(char c,uint8_t page,  uint8_t column){
-    uint8_t i, idx = font_index(c);
+void oled_print_char(char c,uint8_t page, uint8_t column, uint8_t font){
+    uint8_t index = font_index(c);
 
     oled_pos(page, column);
 
-    for(size_t i = 0; i < 8; i++){
-        uint8_t col = pgm_read_byte(&font8[idx][i]);
+
+    switch (font)
+    {
+    case 8:
+        for(size_t i = 0; i < 8; i++){
+        uint8_t col = pgm_read_byte(&font8[index][i]);
         oled_write_data(col);
     }
+        break;
+    case 5:   oled_write_data (0b00111100) ;
+    oled_write_data (0b00011000) ;
+        for(size_t i = 0; i < 5; i++){
+        uint8_t col = pgm_read_byte(&font5[index][i]);
+        oled_write_data(col);
+    }
+        break;
+    case 4:
+        for(size_t i = 0; i < 4; i++){
+        uint8_t col = pgm_read_byte(&font4[index][i]);
+        oled_write_data(col);
+    }
+        break;
+    default:
+        break;
+    }
+   
+}
+    
+
+
+void oled_print_str(const char *str,uint8_t page, uint8_t column,uint8_t font){
+    uint8_t i = 0;
+    uint8_t current_col = column;
+    uint8_t current_page = page;
+
+    while (str[i] != '\0'){
+        if (current_col + 8 > 128){
+            current_col = 0;
+            current_page++;
+            if (current_page == 8){
+                current_page = 0;
+            }
+            oled_print_char(str[i], current_page, current_col, font);
+    } else{
+        oled_print_char(str[i], current_page, current_col, font);
+        
+    }
+    i++;
+    current_col += 8;
+}
 }
 
-/*
-
-void oled_home();
-
-void oled_set_brightness(lvl); // 256-step brightness control. 
-
-*/
+uint8_t font_index(char c) {
+    if (c < 32 || c > 126) return 0; 
+    return (uint8_t)(c - 32);
+}
 
 
+
+
+
+
+void oled_home(volatile dir* d,  volatile homescreen_menu* current_position){
+    oled_print_str("MENU", 0, 50, 8);
+    oled_print_str("PLAY ", 2, 0, 4);
+    oled_print_str("SCOREBOARD", 4, 0, 4);
+    
+    switch (*d)
+    {
+    case DOWN:
+        if (*current_position == PLAY){
+            oled_clear_page(2);
+            oled_print_str("PLAY ", 2, 0, 4);
+            oled_print_arrow(4, 88);
+            *current_position=SCOREBOARD;
+
+        }
+        else if (*current_position == SCOREBOARD){
+            oled_clear_page(4);
+            oled_print_str("SCOREBOARD", 4, 0, 4);
+            oled_print_arrow(2, 40);
+            *current_position=PLAY;
+
+        }
+        break;
+
+        case UP:
+        if (*current_position == PLAY){
+            oled_clear_page(2);
+            oled_print_str("PLAY ", 2, 0, 4);
+            oled_print_arrow(4, 88);
+            *current_position=SCOREBOARD;
+
+        }
+        else if (*current_position == SCOREBOARD){
+            oled_clear_page(4);
+            oled_print_str("SCOREBOARD", 4, 0, 4);
+            oled_print_arrow(2, 40);
+            *current_position=PLAY;
+
+        }
+        break;
+    
+    default:
+        break;
+    }
+        
+}

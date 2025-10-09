@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "adc.h"
 
-volatile uint8_t *ADC_BASE = (uint8_t*)0x1400; //baseadresse ADC
+volatile uint8_t *ADC_BASE = (volatile uint8_t*)0x1400; //baseadresse ADC
 
 void adc_init(void){
     // klokke output OC1A 
@@ -40,7 +40,7 @@ void adc_read_init(){
     ADC_BASE[0] = 0; //cs og write lav
 }
 
-void adc_read(uint8_t* jx, uint8_t* jy, uint8_t* tx, uint8_t* ty){
+void adc_read(volatile uint8_t* jx,volatile uint8_t* jy,volatile uint8_t* tx,volatile uint8_t* ty){
 
     *jx = ADC_BASE[0]; // leser posisjon fra adc med 4 channels
     *jy = ADC_BASE[0];
@@ -48,7 +48,7 @@ void adc_read(uint8_t* jx, uint8_t* jy, uint8_t* tx, uint8_t* ty){
     *ty = ADC_BASE[0];
 }
 
-void pos_calibrate(uint8_t *jx, uint8_t* jy, uint8_t* tx, uint8_t* ty, pos_t *pos){
+void pos_calibrate(volatile uint8_t* jx,volatile uint8_t* jy,volatile uint8_t* tx,volatile uint8_t* ty, volatile pos_t *pos){
     
     // center values: tweak to your hardware
     int16_t jx_raw = (int16_t)(*jx) - 160;
@@ -65,7 +65,7 @@ void pos_calibrate(uint8_t *jx, uint8_t* jy, uint8_t* tx, uint8_t* ty, pos_t *po
 }
 
 
-void pos_read(pos_t *pos, dir*  d){
+void pos_read(volatile pos_t *pos, dir*  d){
     printf("joystick x: %d\r\n", pos->joystick_x);
     printf("joystick y: %d\r\n", pos->joystick_y);
     printf("touchpad x: %d\r\n", pos->touchpad_x);
@@ -75,24 +75,24 @@ void pos_read(pos_t *pos, dir*  d){
 };
 
 
-void pos_direction(pos_t *pos, dir *d) {
+void pos_direction(volatile pos_t *pos, dir *d) {
     int d_x = pos -> joystick_x;
     int d_y = pos -> joystick_y;
-    if (abs(d_y) >= abs(d_x))
-    {
-        if (pos->joystick_y == 0){
-        *d = NEUTRAL;
-    } else if (pos->joystick_y < 0){
+    if (abs(d_y) >= abs(d_x)){
+        if (pos->joystick_y < -40){
         *d = DOWN;
-    } else if (pos->joystick_y > 0){
+    } else if (pos->joystick_y > 40){
         *d = UP;
+    } else {
+        *d = NEUTRAL;
     }
+    
 }else {
-    if (pos->joystick_x < 0){
+    if (pos->joystick_x < -40){
         *d = LEFT;
-    } else if(pos->joystick_x > 0) {
+    } else if(pos->joystick_x > 40) {
         *d = RIGHT;
-    } else if (pos->joystick_x == 0){
+    } else{
         *d = NEUTRAL;
     }
 }

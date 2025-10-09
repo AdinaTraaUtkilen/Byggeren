@@ -2,7 +2,6 @@
 #define external_mem_baseadress 0x1800
 
 #include "avr/io.h"
-#include "util/delay.h"
 #include "stdio.h"
 
 void xmem_init(void);
