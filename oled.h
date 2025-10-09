@@ -14,8 +14,6 @@ void oled_write_data(char data);
 
 void oled_write_command(char data);
 
-void oled_reset();
-
 void oled_home();
 
 void oled_goto_page(uint8_t page);

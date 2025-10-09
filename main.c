@@ -37,7 +37,7 @@ int main()
   oled_clear_all();
  
 
- // oled_print_arrow();
+  oled_print_arrow();
 
 
  while (1)

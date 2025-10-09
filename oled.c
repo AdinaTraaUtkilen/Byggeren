@@ -9,26 +9,16 @@
 void oled_init(){
 
     oled_write_command(0xAE); // display off 
-    oled_write_command(0xA1);// segment remap - horizontal
 
-    oled_write_command(0x20);
+    oled_write_command(0x20); //page adressing
     oled_write_command(0x02);
-     
-    oled_write_command(0xB0);
-    oled_write_command(0x00);
-    oled_write_command(0x10);
-    
 
-     
-     
+    oled_write_command(0xA1);// segment remap - horizontal
     oled_write_command(0xC8); // scan direction
+
     oled_write_command(0xAF); // display on
  
 }
-void oled_reset(){
-
-
-};
 
 
 void oled_write_data(char data){
@@ -49,7 +39,8 @@ void oled_write_command(char data){
 
 void oled_print_arrow ( )
 {
-
+    oled_goto_page(5);
+    oled_goto_column(110);
     oled_write_data (0b00011000) ;
     oled_write_data (0b00011000) ;
     oled_write_data (0b01111110) ;
@@ -65,8 +56,8 @@ void oled_goto_page(uint8_t page){
 }
 
 void oled_goto_column(uint8_t column){
-    oled_write_command(0x00 | column);
-    oled_write_command(0x10 | column);
+    oled_write_command(0x00 | (column & 0x0F));
+    oled_write_command(0x10 | (column >> 4 && 0x0F));
 };
 
 void oled_clear_all(){
@@ -84,9 +75,9 @@ void oled_clear_page(uint8_t page){
     oled_goto_page(page);
     oled_goto_column(0);
 
-    for (size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < 128; i++)
     {  
-        oled_clear_column(i);
+        oled_write_data(0x00);
     }
     
 };
@@ -97,7 +88,7 @@ void oled_clear_column(uint8_t column){
     {
         oled_goto_page(i);
         oled_goto_column(column);
-        oled_write_data(0xFF);
+        oled_write_data(0x00);
     }
 
 };
