@@ -34,21 +34,16 @@ int main()
   led_init(); 
   oled_init();
 
-  
- // oled_write_command("0xB0"); // page 0
- // oled_write_command("0x00"); // col low = 0
- // oled_write_command("0x10"); // col high = 0
+  oled_clear_all();
+ 
 
-  
-
-  oled_print_arrow();
+ // oled_print_arrow();
 
 
  while (1)
  {  
 
   //  led_test();
-
 
 
   _delay_ms(1000);

@@ -18,8 +18,8 @@ void oled_init(){
 
 void oled_reset(){
 
-};
 
+};
 
 
 void oled_write_data(char data){
@@ -50,50 +50,44 @@ void oled_print_arrow ( )
 
 void oled_home();
 
-void oled_goto_page(line);
+void oled_goto_page(uint8_t page);
 
-void oled_goto_column(column){
-
+void oled_goto_column(uint8_t column){
 };
 
-void oled_clear_page(line){
+void oled_clear_page(uint8_t page){
+    oled_write_command(0xB0 + page); // page 0 til 7
+    oled_write_command(0x00); // lower coloum adress
+    oled_write_command(0x10); // higher column adress
+
+
     for (size_t i = 0; i < 128; i++)
-    {
-        oled_write_data
+    { 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        oled_write_data(0x00);
         
     }
     
 };
 
 void oled_clear_all(){
-    for(size_t page = 0; page < 8; page++){
-        segment=00000000
+
+    oled_write_command(0x20); // page adressing mode
+    oled_write_command(0x02);
+
+    for (size_t i = 0; i < 8; i++)
+    {
+        oled_clear_page(i);
+        
     }
-    
 
 }
 
-void oled_clear_column(colum){
+void oled_clear_column(uint8_t colum){
 
 };
+
+/*
 
 void oled_pos(row, column);
 
@@ -101,5 +95,7 @@ void oled_pos(row, column);
 void oled_print(char*);
 
 void oled_set_brightness(lvl); // 256-step brightness control. 
+
+*/
 
 
