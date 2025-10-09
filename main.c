@@ -12,6 +12,7 @@
 #include "interrupt.h"
 #include "global.h"
 #include "avr.h"
+#include "fonts.h"
 
 #define BAUD 9600
 #define MYUBRR F_CPU / 16 / BAUD - 1
@@ -43,7 +44,6 @@ int main()
  while (1)
  {  
 
-    printf("hei");
     led_test();
 
 

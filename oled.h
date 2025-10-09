@@ -26,11 +26,14 @@ void oled_clear_page(uint8_t page);
 
 void oled_clear_all();
 
-/*
 void oled_pos(uint8_t row, uint8_t column);
 
-
 void oled_print(char*);
+
+/*
+
+
+
 
 //void oled_set_brightness(uint8_t lvl);
 */

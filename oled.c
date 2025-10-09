@@ -16,6 +16,10 @@ void oled_init(){
     oled_write_command(0xA1);// segment remap - horizontal
     oled_write_command(0xC8); // scan direction
 
+    oled_write_command(0xD3); // offset
+    oled_write_command(0x00); 
+    oled_write_command(0x40); // startline med offset lik 0
+
     oled_write_command(0xAF); // display on
  
 }
@@ -39,8 +43,7 @@ void oled_write_command(char data){
 
 void oled_print_arrow ( )
 {
-    oled_goto_page(5);
-    oled_goto_column(110);
+    oled_pos(0, 123);
     oled_write_data (0b00011000) ;
     oled_write_data (0b00011000) ;
     oled_write_data (0b01111110) ;
@@ -48,16 +51,16 @@ void oled_print_arrow ( )
     oled_write_data (0b00011000) ;
 }
 
-void oled_home();
+
 
 void oled_goto_page(uint8_t page){
-    oled_write_command(0xB0 | page);
+    oled_write_command(0xB0 | (page & 0x07));
 
 }
 
 void oled_goto_column(uint8_t column){
     oled_write_command(0x00 | (column & 0x0F));
-    oled_write_command(0x10 | (column >> 4 && 0x0F));
+    oled_write_command(0x10 | ((column >> 4) & 0x0F));
 };
 
 void oled_clear_all(){
@@ -93,12 +96,26 @@ void oled_clear_column(uint8_t column){
 
 };
 
+void oled_pos(uint8_t page, uint8_t column){
+    oled_goto_page(page);
+    oled_goto_column(column);
+}
+
+
+void oled_print(char c,uint8_t page,  uint8_t column){
+    uint8_t i, idx = font_index(c);
+
+    oled_pos(page, column);
+
+    for(size_t i = 0; i < 8; i++){
+        uint8_t col = pgm_read_byte(&font8[idx][i]);
+        oled_write_data(col);
+    }
+}
+
 /*
 
-void oled_pos(row, column);
-
-
-void oled_print(char*);
+void oled_home();
 
 void oled_set_brightness(lvl); // 256-step brightness control. 
 
