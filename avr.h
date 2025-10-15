@@ -6,6 +6,7 @@
 #include "util/delay.h"
 #include "stdio.h"
 #include "spi.h"
+#include "global.h"
 
 /* Buttons and led */
 
@@ -55,3 +56,8 @@ void led_on(uint8_t led_num);
 void led_off(uint8_t led_num);
 
 void led_init();
+
+void read_joystick_button(pos_t volatile *pos);
+
+
+void update_buttons(volatile Buttons *btn);

@@ -1,7 +1,10 @@
+
+
 #include "oled.h"
 #include "fonts.h"
 #include <string.h>
-#include "global.h"
+
+
 
 
 //128 x 64 dot matrix panel
@@ -46,6 +49,7 @@ void oled_write_command(char data){
     spi_deactivate_all();
 
 }; 
+
 
 void oled_print_arrow (uint8_t page, uint8_t column )
 {
@@ -170,48 +174,37 @@ uint8_t font_index(char c) {
 }
 
 
-
-
-
-
-void oled_home(volatile dir* d,  volatile homescreen_menu* current_position){
+void oled_home(){
+    oled_clear_all();
     oled_print_str("MENU", 0, 50, 8);
     oled_print_str("PLAY ", 2, 0, 4);
     oled_print_str("SCOREBOARD", 4, 0, 4);
-    
+
+    oled_print_arrow(2, 40);
+
+}
+
+
+void oled_change_arrow(volatile dir* d,  volatile homescreen_arrow* arrow){
+
     switch (*d)
     {
     case DOWN:
-        if (*current_position == PLAY){
+        if (*arrow == PLAY_A){
             oled_clear_page(2);
             oled_print_str("PLAY ", 2, 0, 4);
             oled_print_arrow(4, 88);
-            *current_position=SCOREBOARD;
-
+            *arrow=SCOREBOARD_A;
         }
-        else if (*current_position == SCOREBOARD){
-            oled_clear_page(4);
-            oled_print_str("SCOREBOARD", 4, 0, 4);
-            oled_print_arrow(2, 40);
-            *current_position=PLAY;
-
-        }
+   
         break;
 
         case UP:
-        if (*current_position == PLAY){
-            oled_clear_page(2);
-            oled_print_str("PLAY ", 2, 0, 4);
-            oled_print_arrow(4, 88);
-            *current_position=SCOREBOARD;
-
-        }
-        else if (*current_position == SCOREBOARD){
+        if (*arrow == SCOREBOARD_A){
             oled_clear_page(4);
             oled_print_str("SCOREBOARD", 4, 0, 4);
             oled_print_arrow(2, 40);
-            *current_position=PLAY;
-
+            *arrow=PLAY_A;   
         }
         break;
     
@@ -219,4 +212,77 @@ void oled_home(volatile dir* d,  volatile homescreen_menu* current_position){
         break;
     }
         
+}
+
+void led_play(){
+    led_on(2);
+    led_on(3);
+    _delay_ms(40);
+    led_off(2);
+    led_off(3);
+    _delay_ms(40);
+    led_on(1);
+    led_on(4);
+    _delay_ms(40);
+    led_off(1);
+    led_off(4);
+    _delay_ms(40);
+    led_on(0);
+    led_on(5);
+    _delay_ms(40);
+    led_off(0);
+    led_off(5);
+      
+}
+
+void led_scoreboard(){
+    for (size_t i=0; i<7; i++){
+        led_on(i);
+        _delay_ms(2);
+    }
+    
+    _delay_ms(40);
+    
+    for (size_t i=6; i>=0; i--){
+        led_off(i);
+        _delay_ms(2);
+    }
+    _delay_ms(40);
+
+}
+
+void change_page(volatile pages *page,volatile  homescreen_arrow *arrow, volatile Buttons *btn){
+    switch(*arrow)
+    {
+    case PLAY_A:
+        oled_clear_all();
+        oled_print_str("Lets go!", 3, 30, 8);
+        
+        led_play();
+        
+    
+        *page = PLAY;
+        break;
+    case SCOREBOARD_A:
+        oled_clear_all();
+        oled_print_str("SCOREBOARD", 0, 20, 8);
+        oled_print_str("1.", 2, 0, 4);
+        oled_print_str("2.", 4, 0, 4);
+        oled_print_str("3.", 6, 0, 4);
+        //led_scoreboard();
+   
+        *page = SCOREBOARD;
+        break;
+    default:
+        break;
+    }
+}
+
+void home_button(volatile Buttons *btn, volatile pages *page, volatile homescreen_arrow* arrow){
+    if(btn->L7){
+        oled_home();
+        *page = HOME;
+        *arrow = PLAY_A;
+
+    }
 }

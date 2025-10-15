@@ -22,7 +22,9 @@ volatile pos_t pos;
 volatile dir d = NEUTRAL;
 volatile uint8_t control_flag = 0;
 volatile Buttons btn;
-volatile homescreen_menu m = PLAY;
+volatile homescreen_arrow arrow = PLAY_A;
+volatile pages page = HOME;
+
 
 int main()
 {
@@ -33,15 +35,32 @@ int main()
   spi_master_init();
   led_init(); 
   oled_init();
+  oled_home();
 
  while (1)
  {  
+  position_update(&jx,&jy,&tx,&ty,&pos, &d);
+  read_joystick_button(&pos);
+  update_buttons(&btn);
+  
+ 
+  if(page == HOME){
+      oled_change_arrow(&d, &arrow);
+  }
+
+  if (pos.btn_pressed == 1){
+    printf("der trykket jeg");
+    change_page(&page, &arrow, &btn);
+  }
+  home_button(&btn, &page,&arrow);
  
 
-  oled_home(&d, &m);
-  _delay_ms(100);
 
- }
+  _delay_ms(100);
+  
+
+
+ };
 
   return 0;
 };

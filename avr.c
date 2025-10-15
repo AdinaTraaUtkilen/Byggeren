@@ -22,27 +22,43 @@ void led_off(uint8_t led_num){
 
 
 void led_init(){
-    for(size_t i = 0; i < 5; i++){
+    for(size_t i = 0; i < 6; i++){
         leds_change_state(0, i);
-
     }
 
 }
-/*
-void read_joystick(pos_t *pos){
+
+void read_joystick_button(pos_t volatile *pos){
     spi_activate_io_cs();
     spi_master_transmit(0x03);
     _delay_us(40);
-    uint8_t xpos = spi_master_transmit(0x00);
+    uint8_t xpos = spi_master_receive(0x00);
     _delay_us(2);
-    uint8_t ypos = spi_master_transmit(0x00);
+    uint8_t ypos = spi_master_receive(0x00);
     _delay_us(2);
-    uint8_t BTN = spi_master_transmit(0x00);
+    uint8_t BTN_joy = spi_master_receive(0x00);
     spi_deactivate_all();
-    
-    pos->x = (int8_t)xpos;
-    pos->y = (int8_t)ypos;
-    out->btn = BTN;
+    pos->btn_pressed = BTN_joy;    
 
 }
-*/
+
+
+void update_buttons(volatile Buttons *btn){ 
+    spi_activate_io_cs();
+    spi_master_transmit(0x04);
+    _delay_us(40);
+    uint8_t right = spi_master_receive(0x00);
+    _delay_us(2);
+    uint8_t left = spi_master_receive(0x00);
+    _delay_us(2);
+    uint8_t nav = spi_master_receive(0x00);
+    spi_deactivate_all();
+  
+
+    btn->right = right;
+    btn->left = left;
+    btn->nav = nav;
+
+   // printf("jeg vil printe L7 %d \r\n", btn->L7);
+
+}

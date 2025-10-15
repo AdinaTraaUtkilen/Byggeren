@@ -40,9 +40,26 @@ void spi_master_transmit(char cData){
 
 }
 
+//same function but return a value to read
+uint8_t spi_master_transfer(uint8_t cData){
+    SPDR = cData;
 
+    /*Wait for transmission complete*/
+    while(!(SPSR & (1<<SPIF))){
+        (void)SPDR;
+    };
+    uint8_t rx = SPDR;
+    return rx;
 
-char spi_slave_receive(void){
+}
+
+// sends a dummy byte to receive
+
+uint8_t spi_master_receive(){
+    return spi_master_transfer(0x00);
+}
+
+char spi_slave_receive(){
     /*Wait for reception complete */
     while(!(SPSR & (1 << SPIF)));
 

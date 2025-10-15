@@ -65,7 +65,7 @@ void pos_calibrate(volatile uint8_t* jx,volatile uint8_t* jy,volatile uint8_t* t
 }
 
 
-void pos_read(volatile pos_t *pos, dir*  d){
+void pos_read(volatile pos_t *pos, dir* volatile d){
     printf("joystick x: %d\r\n", pos->joystick_x);
     printf("joystick y: %d\r\n", pos->joystick_y);
     printf("touchpad x: %d\r\n", pos->touchpad_x);
@@ -75,7 +75,7 @@ void pos_read(volatile pos_t *pos, dir*  d){
 };
 
 
-void pos_direction(volatile pos_t *pos, dir *d) {
+void pos_direction(volatile pos_t *pos, dir volatile *d) {
     int d_x = pos -> joystick_x;
     int d_y = pos -> joystick_y;
     if (abs(d_y) >= abs(d_x)){
@@ -117,3 +117,16 @@ const char *dir_str(dir d){
 }
 }
 
+void position_update(uint8_t volatile *jx,uint8_t volatile *jy,uint8_t volatile  *tx,uint8_t  volatile *ty,pos_t volatile *pos, dir volatile *d){ 
+    adc_read_init();
+    if(control_flag){
+      control_flag = 0; // clear flagg
+    }
+
+  /*Inni while*/
+    adc_read(jx, jy, tx, ty);
+    pos_calibrate(jx, jy, tx, ty, pos);
+    pos_direction(pos, d);
+ //   pos_read(pos, d);
+  
+}

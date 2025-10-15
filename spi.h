@@ -22,3 +22,7 @@ void spi_deactivate_all(void);
 void spi_cd_command();
 
 void spi_cd_data();
+
+uint8_t spi_master_transfer(uint8_t cData);
+
+uint8_t spi_master_receive();
