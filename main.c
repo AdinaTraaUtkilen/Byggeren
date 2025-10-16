@@ -12,6 +12,8 @@
 #include "interrupt.h"
 #include "global.h"
 #include "avr.h"
+#include "labtester.h"
+#include "mcp2515.h"
 
 #define BAUD 9600
 #define MYUBRR F_CPU / 16 / BAUD - 1
@@ -36,30 +38,15 @@ int main()
   led_init(); 
   oled_init();
   oled_home();
+  mcp2515_init();
 
  while (1)
  {  
-  position_update(&jx,&jy,&tx,&ty,&pos, &d);
-  read_joystick_button(&pos);
-  update_buttons(&btn);
-  
+ // menu_test(&jx, &jy,&tx, &ty, &pos, &d, &btn, &page, &arrow);
+  bit_modify_test();
+
+  _delay_ms(1000);
  
-  if(page == HOME){
-      oled_change_arrow(&d, &arrow);
-  }
-
-  if (pos.btn_pressed == 1){
-    printf("der trykket jeg");
-    change_page(&page, &arrow, &btn);
-  }
-  home_button(&btn, &page,&arrow);
- 
-
-
-  _delay_ms(100);
-  
-
-
  };
 
   return 0;

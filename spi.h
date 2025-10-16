@@ -16,6 +16,7 @@ char spi_slave_receive(void);
 
 void spi_activate_disp_cs();
 void spi_activate_io_cs();
+void spi_activate_can_cs();
 
 void spi_deactivate_all(void);
 

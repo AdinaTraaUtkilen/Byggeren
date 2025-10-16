@@ -13,9 +13,11 @@ void spi_master_init(){
 
     DDRD |= (1 << PD3); // CS_disp som utgang - retning
     DDRD |= (1 << PD4); // CS_io som utgang - retning
+    DDRB |= (1 << PB0); // cs_can som utgang
 
     PORTD |= (1 << PD4); // setter pinen høy
     PORTD |= (1 << PD3); // setter pinen høy
+    PORTB |= (1 << PB0);
 }
 
 
@@ -50,7 +52,6 @@ uint8_t spi_master_transfer(uint8_t cData){
     };
     uint8_t rx = SPDR;
     return rx;
-
 }
 
 // sends a dummy byte to receive
@@ -58,6 +59,7 @@ uint8_t spi_master_transfer(uint8_t cData){
 uint8_t spi_master_receive(){
     return spi_master_transfer(0x00);
 }
+
 
 char spi_slave_receive(){
     /*Wait for reception complete */
@@ -68,23 +70,33 @@ char spi_slave_receive(){
 }
 
 
-
 void spi_activate_disp_cs(){
     PORTD &= ~(1 << PD3);
-    PORTD |= (1 << PD4); // setter pinen høy
+    PORTD |= (1 << PD4); // deaktiverer io
+    PORTB |= (1 << PB0); // deaktiverer can
+
 
 }
 
 void spi_activate_io_cs(){
     PORTD &= ~(1 << PD4); // aktivere io ved å sette lav
     PORTD |= (1 << PD3); // deaktiverer disp
+    PORTB |= (1 << PB0); // deaktiverer can
 
 }
 
 void spi_deactivate_all(){
-    PORTD |= (1 << PD3);
-    PORTD |= (1 << PD4);
+    PORTD |= (1 << PD3); // disp
+    PORTD |= (1 << PD4); // io
+    PORTB |=  (1 << PB0); // can
 }
+
+void spi_activate_can_cs(){
+    PORTB &= ~(1 << PB0); // aktivere can ved å sette lav
+    PORTD |= (1 << PD3); // deaktiverer disp
+    PORTD |= (1 << PD4); // deaktiverer io
+}
+
 
 void spi_cd_command(){
     PORTE &= ~(1 << PE2);
@@ -93,8 +105,8 @@ void spi_cd_command(){
 
 }
 
-
 void spi_cd_data(){
     PORTE |= (1 << PE2);
     DDRE |= (1 << PE2);
 }
+

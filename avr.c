@@ -28,7 +28,7 @@ void led_init(){
 
 }
 
-void read_joystick_button(pos_t volatile *pos){
+void read_joystick_button( volatile pos_t *pos){
     spi_activate_io_cs();
     spi_master_transmit(0x03);
     _delay_us(40);

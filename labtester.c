@@ -51,21 +51,20 @@ void sram_test_func(){ // ekstern minne tar over
 
 
 // --------------------------  oving 3---------------------------------------
-void position_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty,pos_t *pos, dir *d){ 
+void position_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty,pos_t *pos, dir *d, volatile uint8_t *control_flag){ 
     adc_read_init();
     if(control_flag){
       control_flag = 0; // clear flagg
     }
 
   /*Inni while*/
-    adc_read(jx, jy, tx, ty);
-    pos_calibrate(jx, jy, tx, ty, pos);
-    pos_direction(pos, d);
- //   pos_read(pos, d);
+   adc_read(jx, jy, tx, ty);
+  pos_calibrate(jx, jy, tx, ty, pos);
+   pos_direction(pos, d);
+ pos_read(pos, d);
   
+
 }
-
-
 
 // --------------------------  oving 4---------------------------------------
 void spi_test(){
@@ -111,8 +110,46 @@ void led_test(){
 }
 
 
+void menu_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty, volatile pos_t *pos, volatile dir *d, volatile Buttons *btn, volatile pages *page, volatile homescreen_arrow *arrow){
+  position_update(jx,jy,tx,ty,pos, d);
+  pos_read(pos, d);
+  printf("side er pa %d \r\n ", *page);
+  read_joystick_button(pos);
+  update_buttons(btn);
+  
+  if(*page == HOME){
+      oled_change_arrow(d, arrow);
+  }
+
+  if (pos->btn_pressed == 1){
+    change_page(page, arrow, btn);
+  }
+  home_button(btn, page,arrow);
+ 
+  _delay_ms(50);
+  
+}
 
 
 
 
+// --------------------------  oving 4---------------------------------------
+void bit_modify_test(){
+  uint8_t address = 0b00001111;
+  uint8_t data = 0b00000000;
+  uint8_t mask = 0b11110000;
 
+  mcp2515_write(address, data);
+  uint8_t data_recevied = mcp2515_read(address);
+  
+  printf("data sendt og fatt tilbake: %d \r\n", data_recevied);
+
+  uint8_t new_data = 0b11111111;
+
+  mcp2515_bit_modify(address, mask, new_data);
+  uint8_t data_recevied_mod = mcp2515_read(address);
+
+  //240
+  printf("data sendt og fatt og modifiserrt tilbake: %d \r\n", data_recevied_mod);
+ 
+}

@@ -2,6 +2,7 @@
     "files.associations": {
         "io.h": "c",
         "uart.h": "c",
-        "labtester.h": "c"
+        "labtester.h": "c",
+        "global.h": "c"
     }
 }

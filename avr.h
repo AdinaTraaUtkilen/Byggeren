@@ -57,7 +57,7 @@ void led_off(uint8_t led_num);
 
 void led_init();
 
-void read_joystick_button(pos_t volatile *pos);
+void read_joystick_button(volatile pos_t *pos);
 
 
 void update_buttons(volatile Buttons *btn);
