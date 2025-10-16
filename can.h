@@ -1,18 +1,21 @@
 #pragma once
 
 #include "avr/io.h"
+#include "avr.h"
+#include "mcp2515.h"
+#include <stdbool.h>
 
 
 typedef struct {
     uint16_t id;
-    uint8_t length;
-    uint8_t data[8];
+    char length;
+    char data[8];
 } can_message;
 
 void can_init();
 
-void can_message_send();
+void can_message_send(can_message *message);
 
-void can_message_receive();
+bool can_message_receive(can_message *m_out);
 
 void can_transmit_complete();

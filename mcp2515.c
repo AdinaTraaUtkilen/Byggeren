@@ -12,6 +12,7 @@ void mcp2515_init(){
 }
 
 
+
 uint8_t mcp2515_read(uint8_t address){
     spi_activate_can_cs();
     spi_master_transmit(0x03); // read command
@@ -47,7 +48,6 @@ uint8_t read_status(){
     spi_master_transmit(0b10100000); // read status command
 
     uint8_t status = spi_master_transfer(0x00);
-    uint8_t status_again = spi_master_transfer(0x00);
 
     spi_deactivate_all();
     return status;
