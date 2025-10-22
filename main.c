@@ -41,27 +41,30 @@ int main()
   oled_home();
   mcp2515_init();
   can_init();
-  can_message m = {.id=0x123, .length = 3, .data={0x11,0x22,0x33}};
+  can_message m = {0x123, 3, {'a','m', '1'}};
 
 
  while (1)
  {  
- // menu_test(&jx, &jy,&tx, &ty, &pos, &d, &btn, &page, &arrow);
+  //menu_test(&jx, &jy,&tx, &ty, &pos, &d, &btn, &page, &arrow);
   //bit_modify_test();
   
   can_message_send(&m);
-  for (int i=0;i<50;i++){
-        can_message rx;
-        if (can_message_receive(&rx)) {
-            printf("RX id=0x%03X len=%d data:", rx.id, rx.length);
-            for (int k=0;k<rx.length;k++) printf(" %02X", (uint8_t)rx.data[k]);
-            printf("\r\n");
-            break;
-        }
-        _delay_ms(2);
-    }
+  
 
-    _delay_ms(500);
+  can_message rx;
+  if (can_message_receive(&rx)) {
+      printf("RX id=0x%03X len=%d data:", rx.id, rx.length);
+      for (int k=0;k<rx.length;k++) {
+          printf(" %02c", rx.data[k]);
+         
+          _delay_ms(2);
+      }
+       printf("\r\n");
+      }
+
+
+    _delay_ms(50);
  
  };
 

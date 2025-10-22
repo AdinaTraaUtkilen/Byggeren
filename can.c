@@ -39,11 +39,11 @@ void can_init(){
 
 
 void can_message_send(can_message *message){
-    uint8_t pending_buffer = mcp2515_read(MCP_TXB0CTRL);
-    while(pending_buffer & (1 << 3)){
+    uint8_t pending_buffer = mcp2515_read(MCP_TXB0CTRL); // control register
+    while(pending_buffer & (1 << 3)){ //request-to-send 0
     };
-    uint8_t sid31 = ((message->id) >> 3) & 0xFF;
-    uint8_t sid32 = ((message->id) & 0x07) << 5;
+    uint8_t sid31 = ((message->id) >> 3) & 0xFF; //first seven
+    uint8_t sid32 = ((message->id) & 0x07) << 5; //rest 3
 
     mcp2515_write(0x31, sid31);
     mcp2515_write(0x32, sid32); // id
@@ -58,25 +58,33 @@ void can_message_send(can_message *message){
 
 }
 
-bool can_message_receive(can_message *m_out){ 
-    uint8_t intf = mcp2515_read(MCP_CANINTF);
-    if (!(intf & 0x01)) { // RX0IF?
+bool can_message_receive(can_message *message){ 
+    uint8_t intf = mcp2515_read(MCP_CANINTF); //interrupt flag
+
+    if (!(intf & 0x01)) { // must be cleared to allow new message
         return false;
     }
 
-    // Les ID fra RXB0
-    uint8_t sidh = mcp2515_read(0x61); // RXB0SIDH
-    uint8_t sidl = mcp2515_read(0x62); // RXB0SIDL
-    m_out->id = ((uint16_t)sidh << 3) | (sidl >> 5);
+    // identider bits
+    uint8_t sid61 = mcp2515_read(0x61); // RXB0SIDH
+    uint8_t sid62 = mcp2515_read(0x62); // RXB0SIDL
 
-    uint8_t dlc = mcp2515_read(0x65) & 0x0F; // RXB0DLC
-    m_out->length = dlc > 8 ? 8 : dlc;
+    message->id = (sid61 << 3) | (sid62 >> 5);
 
-    for (uint8_t i=0; i<m_out->length; i++){
-        m_out->data[i] = mcp2515_read(0x66 + i); // RXB0Dn
+    // message length
+    uint8_t length65 = mcp2515_read(0x65);
+    if(length65 > 8){
+        message->length = 8;
+    } else{
+        message->length = length65;
     }
 
-    // Clear RX0IF
+    //message data
+    for (uint8_t i=0; i< message->length; i++){
+        message->data[i] = mcp2515_read(0x66 + i); 
+    }
+
+    // Clear interrupt flag
     mcp2515_bit_modify(MCP_CANINTF, 0x01, 0x00);
     return true;
 
