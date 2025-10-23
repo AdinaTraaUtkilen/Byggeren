@@ -8,33 +8,42 @@ void can_init(){
     mcp2515_reset();
     _delay_ms(50);
     uint8_t config_mode = 0b10000000;
-    uint8_t loopback_mode = 0b01000000;
+    //uint8_t loopback_mode = 0b01000000;
+    uint8_t normal_mode = 0b00000000;
 
     uint8_t rx_interrupt = 0x03;
     uint8_t loopback_flag = 0x03;
 
-    mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, loopback_mode); // CanControll register
-    mcp2515_bit_modify(MCP_CANSTAT, MODE_MASK, loopback_mode); // CanStatus register
-
-    /*
-     mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, config_mode); // CanControll register
-    mcp2515_bit_modify(MCP_CANSTAT, MODE_MASK, config_mode); // CanStatus register
-      uint8_t inter = mcp2515_read(MCP_CANINTE);
-     printf(" interrupt before config(CANINTE=0x%02X)\r\n", inter ) ;
-
+    //mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, loopback_mode); // CanControll register  - lopopback  mode
+    //mcp2515_bit_modify(MCP_CANSTAT, MODE_MASK, loopback_mode); // CanStatus register - lopopback  mode
+    
+    mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, config_mode); // CanControll register - config mode
+    mcp2515_bit_modify(MCP_CANSTAT, MODE_MASK, config_mode); // CanStatus register - config mode
 
  //   mcp2515_bit_modify(MCP_CANINTE, loopback_interrupt, );
-  // 
-    uint8_t canstat2 = mcp2515_read(MCP_CANCTRL);
-    if (( config_mode & MODE_MASK ) != MODE_CONFIG ) {
-        printf(" MCP2515 is NOT in configuration mode after reset (CANSTAT=0x%02X)\r\n", canstat2 ) ;
-    }
-   
-     mcp2515_bit_modify(MCP_CANINTF, 0xFF, 0x00); //rydder flagg, alle mask lik 1 og flag = 0
-     mcp2515_write(MCP_CANINTE, rx_interrupt); // enable rx interrupts
-     */
+
+    while (( config_mode & MODE_MASK ) != MODE_CONFIG ) { ;}
+
+    // skrive til CNF registre
+    // TQ=16, sampler 75% som er 12
+    mcp2515_write(MCP_CNF1, 0x00); // sett BRP=0 og SWJ= 1*TQ (00),
+      
+    mcp2515_write(MCP_CNF2, 0b10111010); // sett BLTMODE=1 og SAMPLE_1X=0, PS1 bit length  = 111 (7 slik at vi får 8), prop_seg bit length =010 (2 slik at vi får 3)
+
+    mcp2515_write(MCP_CNF3, 0x03); // SOF_DISABLE = 0, WAKFIL_DISABLE= 0, 000, PS2 bit lengde= 011 (3 slik at vi får 4)
+
+
+    mcp2515_bit_modify(MCP_CANINTF, 0xFF, 0x00); //rydder flagg, alle mask lik 1 og flag = 0
+    mcp2515_write(MCP_CANINTE, rx_interrupt); // enable rx interrupts
+    
+    mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, normal_mode); // CanControll register - normal mode
+    mcp2515_bit_modify(MCP_CANSTAT, MODE_MASK, normal_mode); // CanStatus register - normal mode
+    
+    
+    while (( normal_mode & MODE_MASK ) != MODE_NORMAL ) { ;}
 
 }
+
 
 
 
