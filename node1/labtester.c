@@ -52,16 +52,12 @@ void sram_test_func(){ // ekstern minne tar over
 
 // --------------------------  oving 3---------------------------------------
 void position_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty,pos_t *pos, dir *d, volatile uint8_t *control_flag){ 
-    adc_read_init();
-    if(control_flag){
-      control_flag = 0; // clear flagg
-    }
 
   /*Inni while*/
    adc_read(jx, jy, tx, ty);
   pos_calibrate(jx, jy, tx, ty, pos);
    pos_direction(pos, d);
- pos_read(pos, d);
+  pos_read(pos, d);
   
 
 }

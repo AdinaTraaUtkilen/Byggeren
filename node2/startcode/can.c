@@ -43,11 +43,17 @@ void can_init(CanInit init, uint8_t rxInterrupt){
     PMC->PMC_PCR = PMC_PCR_EN | (0/*??*/ << PMC_PCR_DIV_Pos) | PMC_PCR_CMD | (ID_CAN0 << PMC_PCR_PID_Pos); 
     PMC->PMC_PCER1 |= 1 << (ID_CAN0 - 32);
     
+    // initierer
+    init.brp = 0b00001101;
+    init.phase1 = 0b0101;
+    init.phase2 = 0b0010;
+    init.propag = 0b0001;
+    init.sjw = 0b0010;
+    init.smp = 0x00;
+
     //Set baudrate, Phase1, phase2 and propagation delay for can bus. Must match on all nodes!
     CAN0->CAN_BR = init.reg; 
-    
-
-
+ 
     // Configure mailboxes
     // transmit
     CAN0->CAN_MB[txMailbox].CAN_MID = CAN_MID_MIDE;
@@ -80,7 +86,10 @@ void can_tx(CanMsg m){
     m.length = m.length > 8 ? 8 : m.length;
     
     //  Put message in can data registers
-    CAN0->CAN_MB[txMailbox].CAN_MDL = m.dword[0];
+    CAN0->CAN_MB[txMailbox].
+#define txMailbox 0
+#define rxMailbox 1
+CAN_MDL = m.dword[0];
     CAN0->CAN_MB[txMailbox].CAN_MDH = m.dword[1];
         
     // Set message length and mailbox ready to send
@@ -110,16 +119,27 @@ uint8_t can_rx(CanMsg* m){
     
     
 
-    
-/*
+ 
+volatile CanMsg can_rx_last;
+volatile uint8_t can_rx_flag;
+
+
+
 // Example CAN interrupt handler
 void CAN0_Handler(void){
     char can_sr = CAN0->CAN_SR; 
     
     // RX interrupt
     if(can_sr & (1 << rxMailbox)){
+    CanMsg m;
+    if (can_rx(&m)){
+        can_rx_last=m;
+        can_rx_flag=1;
+    }
         // Add your message-handling code here
-        can_printmsg(can_rx());
+
+        //can_printmsg(can_rx());
+        //can_printmsg(m); //hvilken av dissse
     } else {
         printf("CAN0 message arrived in non-used mailbox\n\r");
     }
@@ -131,5 +151,5 @@ void CAN0_Handler(void){
     
     NVIC_ClearPendingIRQ(ID_CAN0);
 } 
-*/
+
 

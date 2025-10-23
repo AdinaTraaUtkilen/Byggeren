@@ -3,6 +3,7 @@
         "io.h": "c",
         "uart.h": "c",
         "labtester.h": "c",
-        "global.h": "c"
+        "global.h": "c",
+        "delay.h": "c"
     }
 }

@@ -9,7 +9,7 @@
 typedef struct {
     uint16_t id;
     char length;
-    char data[8];
+    uint8_t data[8];
 } can_message;
 
 void can_init();

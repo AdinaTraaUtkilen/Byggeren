@@ -64,7 +64,7 @@
 #define REG_CAN0_MFID1            (0x400B422CU) /**< \brief (CAN0) Mailbox Family ID Register (MB = 1) */
 #define REG_CAN0_MSR1             (0x400B4230U) /**< \brief (CAN0) Mailbox Status Register (MB = 1) */
 #define REG_CAN0_MDL1             (0x400B4234U) /**< \brief (CAN0) Mailbox Data Low Register (MB = 1) */
-#define REG_CAN0_MDH1             (0x400B4238U) /**< \brief (CAN0) Mailbox Data High Register (MB = 1) */
+#define REG_CAN0_MDH1          bitrate   (0x400B4238U) /**< \brief (CAN0) Mailbox Data High Register (MB = 1) */
 #define REG_CAN0_MCR1             (0x400B423CU) /**< \brief (CAN0) Mailbox Control Register (MB = 1) */
 #define REG_CAN0_MMR2             (0x400B4240U) /**< \brief (CAN0) Mailbox Mode Register (MB = 2) */
 #define REG_CAN0_MAM2             (0x400B4244U) /**< \brief (CAN0) Mailbox Acceptance Mask Register (MB = 2) */

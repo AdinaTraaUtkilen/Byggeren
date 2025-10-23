@@ -11,6 +11,15 @@
 #include "sam/sam3x/include/sam3x8e.h"
 #include "sam/sam3x/include/sam.h"
 #include "startcode/uart.h"
+#include "startcode/can.h"
+
+
+void delay_ms(uint32_t ms){
+    uint32_t count = (SystemCoreClock /10000)*ms;
+    while (count--){
+        __asm__("nop");
+    }
+}
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -26,8 +35,11 @@
 int main()
 {
     SystemInit();
+    CanInit init={0};
+    uint8_t rxInterrupt=0;
 
-    WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
+    //WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
+    WDT->WDT_MR = WDT_MR_WDDIS; // Enable Watchdog Timer
 
     //activate the clock PIOB 
     PMC->PMC_PCER0 = (1 << ID_PIOB);
@@ -40,11 +52,21 @@ int main()
 
     //Uncomment after including uart above
     uart_init(F_CPU, BAUD); //bruk ACM1
+
+    can_init( init, rxInterrupt);
+    
+
+    CanMsg rx;
    
     while (1)
     {
-        /* code */
-         printf("Hello World\n\r");
+        uint8_t read_can = can_rx(&rx);
+        printf("far du melding ja eller nei: %x \r\n", read_can);
+        if(read_can){
+            printf("RX: \r\n");
+            can_printmsg(rx);
+        }
+        
 
     }
     

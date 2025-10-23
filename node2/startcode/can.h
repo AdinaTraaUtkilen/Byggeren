@@ -63,7 +63,7 @@ struct Byte8 {
 //        .length = sizeof(YourStruct),
 //        .byte8 = union_cast(Byte8, ((YourStruct){
 //            .a = 10,
-//            .b = 20,
+//            .b = 20,bitrate
 //            .c = -30.0,
 //        })),
 //    };

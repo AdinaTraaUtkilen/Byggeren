@@ -51,16 +51,16 @@ void adc_read(volatile uint8_t* jx,volatile uint8_t* jy,volatile uint8_t* tx,vol
 void pos_calibrate(volatile uint8_t* jx,volatile uint8_t* jy,volatile uint8_t* tx,volatile uint8_t* ty, volatile pos_t *pos){
     
     // center values: tweak to your hardware
-    int16_t jx_raw = (int16_t)(*jx) - 160;
-    int16_t jy_raw = (int16_t)(*jy) - 160;
-    int16_t tx_raw = (int16_t)(*tx) - 128;
-    int16_t ty_raw = (int16_t)(*ty) - 128;
+    //int16_t jx_raw = (int16_t)(*jx) - 70;
+    //int16_t jy_raw = (int16_t)(*jy) - 70;
+    //int16_t tx_raw = (int16_t)(*tx) - 128;
+    //int16_t ty_raw = (int16_t)(*ty) - 128;
 
     // scale to roughly -100..100
-    pos->joystick_x = (int8_t)( jx_raw * 100 / 90 );
-    pos->joystick_y = (int8_t)( jy_raw * 100 / 90 );
-    pos->touchpad_x = (int8_t)( tx_raw * 100 / 128 );
-    pos->touchpad_y = (int8_t)( ty_raw * 100 / 128 );
+    pos->joystick_x = (uint8_t)((*jx - 60) * 100 / 100 );
+    pos->joystick_y = (uint8_t)((*jy - 60) * 100 / 100 );
+    pos->touchpad_x = (uint8_t)( (*tx - 128) * 100 / 128 );
+    pos->touchpad_y = (uint8_t)( (*ty - 128) * 100 / 128 );
 
 }
 

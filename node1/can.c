@@ -8,15 +8,15 @@ void can_init(){
     mcp2515_reset();
     _delay_ms(50);
     uint8_t config_mode = 0b10000000;
-    //uint8_t loopback_mode = 0b01000000;
+    uint8_t loopback_mode = 0b01000000;
     uint8_t normal_mode = 0b00000000;
 
     uint8_t rx_interrupt = 0x03;
     uint8_t loopback_flag = 0x03;
 
-    //mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, loopback_mode); // CanControll register  - lopopback  mode
-    //mcp2515_bit_modify(MCP_CANSTAT, MODE_MASK, loopback_mode); // CanStatus register - lopopback  mode
-    
+   // mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, loopback_mode); // CanControll register  - lopopback  mode
+   // mcp2515_bit_modify(MCP_CANSTAT, MODE_MASK, loopback_mode); // CanStatus register - lopopback  mode
+
     mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, config_mode); // CanControll register - config mode
     mcp2515_bit_modify(MCP_CANSTAT, MODE_MASK, config_mode); // CanStatus register - config mode
 

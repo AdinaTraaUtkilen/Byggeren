@@ -5,11 +5,11 @@
 typedef enum { LEFT, RIGHT, UP, DOWN, NEUTRAL } dir;
 
 typedef struct {
-    int8_t joystick_x;
-    int8_t joystick_y;
-    int8_t touchpad_x;
-    int8_t touchpad_y;
-    int8_t btn_pressed;
+    uint8_t joystick_x;
+    uint8_t joystick_y;
+    uint8_t touchpad_x;
+    uint8_t touchpad_y;
+    uint8_t btn_pressed;
 } pos_t;
 
 extern volatile pos_t pos;
