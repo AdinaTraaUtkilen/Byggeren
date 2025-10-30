@@ -55,8 +55,9 @@ int main()
     {
         uint8_t read_can = can_rx(&rx);
         if(read_can){
-            printf("RX: \r\n");
             can_printmsg(rx);
+            printf("\r\n");
+            joystick_to_pwm(&rx);
         }
         
 
