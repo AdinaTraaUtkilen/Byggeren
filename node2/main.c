@@ -39,27 +39,18 @@ int main()
     CanInit init={0};
     uint8_t rxInterrupt=0;
 
-    //WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
+    pwm_driver();
+    servo_driver();
+
     WDT->WDT_MR = WDT_MR_WDDIS; // Enable Watchdog Timer
 
-    //activate the clock PIOB 
-    PMC->PMC_PCER0 = (1 << ID_PIOB);
-
-    PIOB->PIO_PER = (1 << 13); // enable PB13
-    PIOB->PIO_OER = (1 << 13); // output
-
-
-    PIOB->PIO_SODR = (1 << 13); // set data high
-
-    //Uncomment after including uart above
     uart_init(F_CPU, BAUD); //bruk ACM1
 
     can_init( init, rxInterrupt);
     
 
     CanMsg rx;
-    pwm_driver();
-    servo_driver();
+    
     while (1)
     {
         uint8_t read_can = can_rx(&rx);
