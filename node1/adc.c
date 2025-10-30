@@ -3,6 +3,7 @@
 
 volatile uint8_t *ADC_BASE = (volatile uint8_t*)0x1400; //baseadresse ADC
 
+
 void adc_init(void){
     // klokke output OC1A 
     DDRD |= (1 << PD5);
@@ -55,12 +56,8 @@ void adc_read_init(){
 }
 
 void adc_read(volatile uint8_t* jx,volatile uint8_t* jy,volatile uint8_t* tx,volatile uint8_t* ty){
-    /*DDRD &= ~(1 << PD2); // PD2 som inngang for busy, sjekke når den blir aktiv høy
-    while(!(PIND & (1 << PD2))){ //vente til busy ferdig. page 15 in adc datasheet
-        ;
-        printf("busy \r\n");
-     };
-     */
+
+    adc_read_init();
     *jx = ADC_BASE[0]; // leser posisjon fra adc med 4 channels
     *jy = ADC_BASE[0];
     *tx = ADC_BASE[0];
@@ -137,11 +134,6 @@ const char *dir_str(dir d){
 }
 
 void position_update(uint8_t volatile *jx,uint8_t volatile *jy,uint8_t volatile  *tx,uint8_t  volatile *ty,pos_t volatile *pos, dir volatile *d){ 
-    adc_read_init();
-    if(control_flag){
-      control_flag = 0; // clear flagg
-    }
-
 /*  Inni while */
     adc_read(jx, jy, tx, ty);
     pos_calibrate(jx, jy, tx, ty, pos);

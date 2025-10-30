@@ -107,8 +107,8 @@ void led_test(){
 
 
 void menu_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty, volatile pos_t *pos, volatile dir *d, volatile Buttons *btn, volatile pages *page, volatile homescreen_arrow *arrow){
- // position_update(jx,jy,tx,ty,pos, d);
-  //pos_print(pos, d);
+ position_update(jx,jy,tx,ty,pos, d);
+  pos_print(pos, d);
  // printf("side er pa %d \r\n ", *page);
   read_joystick_button(pos);
   update_buttons(btn);
