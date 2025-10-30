@@ -12,6 +12,7 @@
 #include "sam/sam3x/include/sam.h"
 #include "startcode/uart.h"
 #include "startcode/can.h"
+#include "pwm.h"
 
 
 void delay_ms(uint32_t ms){
@@ -57,7 +58,8 @@ int main()
     
 
     CanMsg rx;
-   
+    pwm_driver();
+    servo_driver();
     while (1)
     {
         uint8_t read_can = can_rx(&rx);

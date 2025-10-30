@@ -9,11 +9,8 @@ SOURCE_FILES = \
 	$(BOOTUP) \
 	main.c \
 	startcode/uart.c \
-	startcode/can.c  
-#	../path_to/uart.c \
-#   filename1.c \
-#   filename2.c \
-#	filenameN.c
+	startcode/can.c  \
+	pwm.c
 
 # Feel free to ignore anything below this line
 VPATH:= $(dir $(SOURCE_FILES))
