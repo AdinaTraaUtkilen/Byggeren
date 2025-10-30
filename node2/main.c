@@ -61,7 +61,6 @@ int main()
     while (1)
     {
         uint8_t read_can = can_rx(&rx);
-        printf("far du melding ja eller nei: %x \r\n", read_can);
         if(read_can){
             printf("RX: \r\n");
             can_printmsg(rx);

@@ -5,9 +5,11 @@
 
 void can_printmsg(CanMsg m){
     printf("CanMsg(id:%d, length:%d, data:{", m.id, m.length);
+
     if(m.length){
         printf("%d", m.byte[0]);
     }
+
     for(uint8_t i = 1; i < m.length; i++){
         printf(", %d", m.byte[i]);
     }

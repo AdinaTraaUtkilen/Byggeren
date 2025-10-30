@@ -57,7 +57,7 @@ void position_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty,pos_t *pos, d
    adc_read(jx, jy, tx, ty);
   pos_calibrate(jx, jy, tx, ty, pos);
    pos_direction(pos, d);
-  pos_read(pos, d);
+  pos_print(pos, d);
   
 
 }
@@ -107,9 +107,9 @@ void led_test(){
 
 
 void menu_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty, volatile pos_t *pos, volatile dir *d, volatile Buttons *btn, volatile pages *page, volatile homescreen_arrow *arrow){
-  position_update(jx,jy,tx,ty,pos, d);
-  pos_read(pos, d);
-  printf("side er pa %d \r\n ", *page);
+ // position_update(jx,jy,tx,ty,pos, d);
+  //pos_print(pos, d);
+ // printf("side er pa %d \r\n ", *page);
   read_joystick_button(pos);
   update_buttons(btn);
   
@@ -125,8 +125,6 @@ void menu_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty, volatile pos_t *
   _delay_ms(50);
   
 }
-
-
 
 
 // --------------------------  oving 4---------------------------------------
@@ -149,3 +147,25 @@ void bit_modify_test(){
   printf("data sendt og fatt og modifiserrt tilbake: %d \r\n", data_recevied_mod);
  
 }
+
+// --------------------------  oving 4---------------------------------------
+void send_joystick_pos(can_message *message_ptr){
+  message_ptr -> data[0]= (uint8_t)pos.joystick_x;
+  message_ptr -> data[1]= (uint8_t)pos.joystick_y;
+  message_ptr -> data[2]= (uint8_t)pos.touchpad_x;
+  message_ptr -> data[3]= (uint8_t)pos.touchpad_y;
+  message_ptr -> data[4]= (uint8_t)pos.btn_pressed;
+
+  can_message_send(message_ptr);
+
+  can_message rx;
+  if (can_message_receive(&rx)) {
+      printf("RX id=0x%03X len=%d data:", rx.id, rx.length);
+      for (int k=0;k<rx.length;k++) {
+          printf(" %02d", rx.data[k]);
+         
+          _delay_ms(2);
+      }
+       printf("\r\n");
+      }
+ };

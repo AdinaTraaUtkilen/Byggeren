@@ -11,6 +11,7 @@
 #include "avr.h"
 #include "oled.h"
 #include "mcp2515.h"
+#include "can.h"
 
 
 void test_uart();
@@ -29,3 +30,5 @@ void led_test();
 void menu_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty, volatile pos_t *pos, volatile dir *d, volatile Buttons *btn, volatile pages *page, volatile homescreen_arrow *arrow);
 
 void bit_modify_test();
+
+void send_joystick_pos(can_message *message_ptr);

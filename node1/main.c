@@ -41,11 +41,12 @@ int main()
   oled_home();
   mcp2515_init();
   can_init();
-  can_message m = {0x123, 5, {0}};
+  can_message m = {0x23, 5, {0}};
 
-  can_message* message_ptr = &m;
+
 
   adc_read_init();
+  adc_read(&jx, &jy,&tx, &ty);
   if(control_flag){
       control_flag = 0; // clear flagg
     }
@@ -53,21 +54,14 @@ int main()
 
  while (1)
  {  
-  menu_test(&jx, &jy,&tx, &ty, &pos, &d, &btn, &page, &arrow);
- 
+ // menu_test(&jx, &jy,&tx, &ty, &pos, &d, &btn, &page, &arrow);
+  position_update(&jx, &jy,&tx, &ty, &pos, &d);
+  printf("joystick x: %d\r\n", jx);
+  printf("joystick y: %d\r\n", jy);
   
-  message_ptr -> data[0]= pos.joystick_x;
-  message_ptr -> data[1]= pos.joystick_y;
-  message_ptr -> data[2]= pos.touchpad_x;
-  message_ptr -> data[3]= pos.touchpad_y;
-  message_ptr -> data[4]= pos.btn_pressed;
  
-  //bit_modify_test();
- // printf("message numeber: %x \r\n", message_ptr->data[0]);
- // _delay_ms(200);
-  can_message_send(message_ptr);
-  //position_test(&jx, &jy,&tx, &ty, &pos, &d, control_flag);
-  _delay_ms(500);
+ // send_joystick_pos(&m);
+  _delay_ms(200);
  
  }
   return 0;
@@ -76,15 +70,5 @@ int main()
 
 
  /*
-  can_message rx;
-  if (can_message_receive(&rx)) {
-      printf("RX id=0x%03X len=%d data:", rx.id, rx.length);
-      for (int k=0;k<rx.length;k++) {
-          printf(" %02x", rx.data[k]);
-         
-          _delay_ms(2);
-      }
-       printf("\r\n");
-      }
- };
+  
  */

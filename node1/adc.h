@@ -12,7 +12,7 @@ void adc_read(volatile uint8_t* jx,volatile uint8_t* jy,volatile uint8_t* tx,vol
 
 void pos_calibrate(volatile uint8_t* jx,volatile uint8_t* jy,volatile uint8_t* tx,volatile uint8_t* ty, volatile pos_t *pos);
  
-void pos_read(volatile pos_t *pos,  volatile dir*d);
+void pos_print(volatile pos_t *pos,  volatile dir*d);
 
 void pos_direction(volatile pos_t *pos, dir volatile *d);
 

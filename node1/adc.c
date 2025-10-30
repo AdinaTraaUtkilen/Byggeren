@@ -14,7 +14,21 @@ void adc_init(void){
    // 0.8192 mHz Mhz: 4.9 / 2*1 + (1+2)
 
     // min 0.5 mhz og maks 5mhz
-  
+    
+    for (size_t i = 0; i < 4; i++)
+    {
+    adc_read_init();
+    printf("jeg er her, adc_init \r\n");
+
+   volatile uint8_t junk;
+   junk = ADC_BASE[0];   // leser posisjon fra adc med 4 channels
+   junk = ADC_BASE[0];
+   junk = ADC_BASE[0];
+   junk = ADC_BASE[0];
+
+    }
+    
+
 }
 
 
@@ -22,12 +36,12 @@ void adc_init(void){
 /* Polling
 void adc_read(uint8_t* jx, uint8_t* jy, uint8_t* tx, uint8_t* ty){
     ADC_BASE[0] = 0; //cs og write lav
-    
-   DDRD &= ~(1 << PD2); // PD2 som inngang for busy, sjekke når den blir aktiv høy
-   while(!(PIND & (1 << PD2))){ //vente til busy ferdig. page 15 in adc datasheet
+        DDRD &= ~(1 << PD2); // PD2 som inngang for busy, sjekke når den blir aktiv høy
+    while(!(PIND & (1 << PD2))){ //vente til busy ferdig. page 15 in adc datasheet
     ;
     printf("busy \r\n");
    };
+
 
     *jx = ADC_BASE[0]; // leser posisjon fra adc med 4 channels
     *jy = ADC_BASE[0];
@@ -41,7 +55,12 @@ void adc_read_init(){
 }
 
 void adc_read(volatile uint8_t* jx,volatile uint8_t* jy,volatile uint8_t* tx,volatile uint8_t* ty){
-
+    /*DDRD &= ~(1 << PD2); // PD2 som inngang for busy, sjekke når den blir aktiv høy
+    while(!(PIND & (1 << PD2))){ //vente til busy ferdig. page 15 in adc datasheet
+        ;
+        printf("busy \r\n");
+     };
+     */
     *jx = ADC_BASE[0]; // leser posisjon fra adc med 4 channels
     *jy = ADC_BASE[0];
     *tx = ADC_BASE[0];
@@ -57,15 +76,15 @@ void pos_calibrate(volatile uint8_t* jx,volatile uint8_t* jy,volatile uint8_t* t
     //int16_t ty_raw = (int16_t)(*ty) - 128;
 
     // scale to roughly -100..100
-    pos->joystick_x = (uint8_t)((*jx - 60) * 100 / 100 );
-    pos->joystick_y = (uint8_t)((*jy - 60) * 100 / 100 );
-    pos->touchpad_x = (uint8_t)( (*tx - 128) * 100 / 128 );
-    pos->touchpad_y = (uint8_t)( (*ty - 128) * 100 / 128 );
+    pos->joystick_x = (uint8_t)((*jx - 62) * 113 / 100);
+    pos->joystick_y = (uint8_t)((*jy - 62) * 113 / 100);
+    pos->touchpad_x = (uint8_t)( (*tx ) * 200 / 255 );
+    pos->touchpad_y = (uint8_t)( (*ty ) * 200 / 255 );
 
 }
 
 
-void pos_read(volatile pos_t *pos,  volatile  dir*d){
+void pos_print(volatile pos_t *pos,  volatile  dir*d){
     printf("joystick x: %d\r\n", pos->joystick_x);
     printf("joystick y: %d\r\n", pos->joystick_y);
     printf("touchpad x: %d\r\n", pos->touchpad_x);
@@ -78,19 +97,19 @@ void pos_read(volatile pos_t *pos,  volatile  dir*d){
 void pos_direction(volatile pos_t *pos, dir volatile *d) {
     int d_x = pos -> joystick_x;
     int d_y = pos -> joystick_y;
-    if (abs(d_y) >= abs(d_x)){
-        if (pos->joystick_y < -40){
+    if (abs(d_y-100) >= abs(d_x-100)){
+        if (pos->joystick_y < 60){
         *d = DOWN;
-    } else if (pos->joystick_y > 40){
+    } else if (pos->joystick_y > 140){
         *d = UP;
     } else {
         *d = NEUTRAL;
     }
     
 }else {
-    if (pos->joystick_x < -40){
+    if (pos->joystick_x < 60){
         *d = LEFT;
-    } else if(pos->joystick_x > 40) {
+    } else if(pos->joystick_x > 140) {
         *d = RIGHT;
     } else{
         *d = NEUTRAL;
@@ -127,6 +146,7 @@ void position_update(uint8_t volatile *jx,uint8_t volatile *jy,uint8_t volatile 
     adc_read(jx, jy, tx, ty);
     pos_calibrate(jx, jy, tx, ty, pos);
     pos_direction(pos, d);
- //   pos_read(pos, d);
+ //   pos_print(pos, d);
+    printf("jeg er her, pos_update \r\n");
   
 }
