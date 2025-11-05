@@ -11,7 +11,8 @@ SOURCE_FILES = \
 	startcode/uart.c \
 	startcode/can.c  \
 	pwm.c \
-	ir.c
+	ir.c \
+	startcode/time.c
 
 # Feel free to ignore anything below this line
 VPATH:= $(dir $(SOURCE_FILES))

@@ -12,16 +12,11 @@
 #include "sam/sam3x/include/sam.h"
 #include "startcode/uart.h"
 #include "startcode/can.h"
+#include "startcode/time.h"
 #include "pwm.h"
 #include "ir.h"
 
 
-void delay_ms(uint32_t ms){
-    uint32_t count = (SystemCoreClock /10000)*ms;
-    while (count--){
-        __asm__("nop");
-    }
-}
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -37,6 +32,7 @@ void delay_ms(uint32_t ms){
 int main()
 {
     SystemInit();
+
     CanInit init={0};
     uint8_t rxInterrupt=0;
 
@@ -50,9 +46,13 @@ int main()
     can_init( init, rxInterrupt);
 
     ir_init();
+
+
     
 
+
     CanMsg rx;
+
     
     while (1)
     {
@@ -64,10 +64,18 @@ int main()
             joystick_to_pwm(&rx);
         }
 
-        uint8_t ir_signal = ir_read();
 
-        printf("Ir signal: %d \r\n", ir_signal);
-        
+
+        uint16_t ir_signal = ir_read();
+        float ir_filtered = ir_filter_signal(ir_signal);
+        float ir_filtered_volt =  ir_filtered * 3.3f / 4095.0f;
+        // update_game(ir_filtered_volt);
+
+        printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
+        uint8_t score = update_game(ir_filtered_volt);
+
+        printf("score tid er naa: %d \r\n ", score);
+
 
     }
     
