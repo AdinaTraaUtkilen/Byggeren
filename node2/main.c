@@ -13,6 +13,7 @@
 #include "startcode/uart.h"
 #include "startcode/can.h"
 #include "pwm.h"
+#include "ir.h"
 
 
 void delay_ms(uint32_t ms){
@@ -47,6 +48,8 @@ int main()
     uart_init(F_CPU, BAUD); //bruk ACM1
 
     can_init( init, rxInterrupt);
+
+    ir_init();
     
 
     CanMsg rx;
@@ -54,13 +57,18 @@ int main()
     while (1)
     {
         uint8_t read_can = can_rx(&rx);
+
         if(read_can){
             can_printmsg(rx);
             printf("\r\n");
             joystick_to_pwm(&rx);
         }
+
+        uint8_t ir_signal = ir_read();
+
+        printf("Ir signal: %d \r\n", ir_signal);
         
 
     }
     
-}
+}        

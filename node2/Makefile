@@ -10,7 +10,8 @@ SOURCE_FILES = \
 	main.c \
 	startcode/uart.c \
 	startcode/can.c  \
-	pwm.c
+	pwm.c \
+	ir.c
 
 # Feel free to ignore anything below this line
 VPATH:= $(dir $(SOURCE_FILES))
