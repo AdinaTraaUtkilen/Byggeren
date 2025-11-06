@@ -37,9 +37,6 @@ int main()
     CanInit init={0};
     uint8_t rxInterrupt=0;
 
-    pwm_servo_driver();
-    servo_driver();
-    encoder_driver();
 
     WDT->WDT_MR = WDT_MR_WDDIS; // disable Watchdog Timer
 
@@ -47,6 +44,9 @@ int main()
 
     can_init( init, rxInterrupt);
 
+    pwm_servo_driver();
+    servo_driver();
+    encoder_driver_init();
     ir_init();
     CanMsg rx;
     
@@ -56,7 +56,7 @@ int main()
     {
 
         uint32_t encoder_value = read_encoder();
-        printf("ENCODER VALUE : %x \r\n", encoder_value);
+       // printf("ENCODER VALUE : %d \r\n", encoder_value);
 
 
         uint8_t read_can = can_rx(&rx);
@@ -68,13 +68,12 @@ int main()
         }
 
 
-
         uint16_t ir_signal = ir_read();
         float ir_filtered = ir_filter_signal(ir_signal);
         float ir_filtered_volt =  ir_filtered * 3.3f / 4095.0f;
 
 
-        //printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
+     //   printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
         uint8_t score = update_game(ir_filtered_volt);
 
         //printf("score tid er naa: %d \r\n ", score);

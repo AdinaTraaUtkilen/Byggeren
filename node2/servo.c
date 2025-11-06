@@ -46,7 +46,6 @@ void pwm_servo_driver(){
 void joystick_to_pwm(CanMsg* message){
     uint8_t joystick_x= message->byte[0];  
     uint16_t D_tic = 52500 - (13*joystick_x) - 2625;
-    printf("jeg er her %d \r\n", D_tic);
     check_min_max(D_tic);
     
 }

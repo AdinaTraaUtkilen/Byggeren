@@ -7,7 +7,7 @@
 
 void pwm_encoder_driver();
 
-void encoder_driver();
+void encoder_driver_init();
 
 uint32_t read_encoder();
 
