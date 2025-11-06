@@ -72,4 +72,4 @@ build/ir.o: ir.c ir.h sam/sam3x/include/sam.h sam/sam3x/include/sam3x8e.h \
  sam/sam3x/include/instance/instance_rtc.h \
  sam/sam3x/include/instance/instance_gpbr.h \
  sam/sam3x/include/pio/pio_sam3x8e.h \
- sam/sam3x/include/component/component_adc.h startcode/time.h
+ sam/sam3x/include/component/component_adc.h

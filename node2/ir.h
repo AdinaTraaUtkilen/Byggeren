@@ -3,7 +3,7 @@
 
 #include "sam/sam3x/include/sam.h"
 #include "sam/sam3x/include/component/component_adc.h"
-#include "startcode/time.h"
+
 
 void ir_init();
 

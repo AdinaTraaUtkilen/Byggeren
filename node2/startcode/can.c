@@ -71,6 +71,7 @@ void can_init(CanInit init, uint8_t rxInterrupt){
         CAN0->CAN_IER |= (1 << rxMailbox); 
         // Enable interrupt in NVIC 
         NVIC_EnableIRQ(ID_CAN0);
+        NVIC_ClearPendingIRQ(CAN0_IRQn);
     }
 
     // Enable CAN
@@ -129,15 +130,15 @@ volatile uint8_t can_rx_flag;
 
 // Example CAN interrupt handler
 void CAN0_Handler(void){
-    char can_sr = CAN0->CAN_SR; 
+    uint32_t can_sr = CAN0->CAN_SR; 
     
     // RX interrupt
     if(can_sr & (1 << rxMailbox)){
-    CanMsg m;
-    if (can_rx(&m)){
+        CanMsg m;
+        if (can_rx(&m)){
         can_rx_last=m;
         can_rx_flag=1;
-    }
+        }
         // Add your message-handling code here
 
         //can_printmsg(can_rx());

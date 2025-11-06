@@ -13,8 +13,9 @@
 #include "startcode/uart.h"
 #include "startcode/can.h"
 #include "startcode/time.h"
-#include "pwm.h"
+#include "servo.h"
 #include "ir.h"
+#include "motordriver.h"
 
 
 
@@ -36,31 +37,33 @@ int main()
     CanInit init={0};
     uint8_t rxInterrupt=0;
 
-    pwm_driver();
+    pwm_servo_driver();
     servo_driver();
+    encoder_driver();
 
-    WDT->WDT_MR = WDT_MR_WDDIS; // Enable Watchdog Timer
+    WDT->WDT_MR = WDT_MR_WDDIS; // disable Watchdog Timer
 
     uart_init(F_CPU, BAUD); //bruk ACM1
 
     can_init( init, rxInterrupt);
 
     ir_init();
-
-
-    
-
-
     CanMsg rx;
+    
 
     
     while (1)
     {
+
+        uint32_t encoder_value = read_encoder();
+        printf("ENCODER VALUE : %x \r\n", encoder_value);
+
+
         uint8_t read_can = can_rx(&rx);
 
         if(read_can){
-            can_printmsg(rx);
-            printf("\r\n");
+            //can_printmsg(rx);
+            //printf("\r\n");
             joystick_to_pwm(&rx);
         }
 
@@ -69,12 +72,12 @@ int main()
         uint16_t ir_signal = ir_read();
         float ir_filtered = ir_filter_signal(ir_signal);
         float ir_filtered_volt =  ir_filtered * 3.3f / 4095.0f;
-        // update_game(ir_filtered_volt);
 
-        printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
+
+        //printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
         uint8_t score = update_game(ir_filtered_volt);
 
-        printf("score tid er naa: %d \r\n ", score);
+        //printf("score tid er naa: %d \r\n ", score);
 
 
     }

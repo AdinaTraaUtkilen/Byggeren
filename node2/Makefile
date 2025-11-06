@@ -10,9 +10,10 @@ SOURCE_FILES = \
 	main.c \
 	startcode/uart.c \
 	startcode/can.c  \
-	pwm.c \
+	servo.c \
 	ir.c \
-	startcode/time.c
+	startcode/time.c \
+	motordriver.c
 
 # Feel free to ignore anything below this line
 VPATH:= $(dir $(SOURCE_FILES))

@@ -1,10 +1,10 @@
-#include "pwm.h"
+#include "servo.h"
 
 
 #define F_CPU 84000000
 
 
-void pwm_driver(){
+void pwm_servo_driver(){
     PMC -> PMC_PCER0 |= (1 << ID_PIOB);
     PMC -> PMC_PCER1 = PMC_PCER1_PID36;// enable peripheral clock signal - 36
     PIOB -> PIO_PDR = PIO_PDR_P13; // disable PIO
