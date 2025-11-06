@@ -21,13 +21,17 @@ void pwm_motor_driver(){ // encoder eller motor
 
 void encoder_driver_init(){
     PMC -> PMC_WPMR = 0x504D4300;
-    PMC -> PMC_PCER0 |= (1 << ID_PIOA);
-    PMC -> PMC_PCER0 |= (1 << ID_PIOC);
-   // PMC -> PMC_PCER0 |= PMC_PCER0_PID13; // output C
-    // PMC -> PMC_PCER0 |= PMC_PCER0_PID11; // output A
+    if (PMC->PMC_WPMR & PMC_WPMR_WPEN){
+        printf("Operation not permittted");
+    }
+    //PMC -> PMC_PCER0 |= (1 << ID_PIOA);
+   // PMC -> PMC_PCER0 |= (1 << ID_PIOC);
+  //  PMC -> PMC_PCER0 |= PMC_PCER0_PID13; // output C
+ //   PMC -> PMC_PCER0 |= PMC_PCER0_PID11; // output A
 
-    PMC -> PMC_PCER0 |= PMC_PCER0_PID29; //klokke for TC2
+    PMC-> PMC_PCER1 |= (1 << (ID_TC6 - 32)) | (1 << (ID_TC7 - 32)) ;
 
+    //PMC -> PMC_PCER0 |= PMC_PCER0_PID29; //klokke for TC28
     //sørger for at PA29 ikke driver linja
     PIOA -> PIO_PER |= PIO_PER_P29; //PIO-kontroll
     PIOA -> PIO_ODR |= PIO_PER_P29; // input
@@ -39,10 +43,20 @@ void encoder_driver_init(){
 //    PIOC -> PIO_IFER = PIO_IFER_P25 | PIO_IFER_P26;
   //  PIOC->PIO_PUDR  = PIO_PUDR_P25 | PIO_PUDR_P26; 
     REG_TC2_WPMR = (0x54494D << 8);
+    REG_TC2_WPMR &= ~(TC_WPMR_WPEN); 
+    REG_TC2_BMR = TC_BMR_QDEN | TC_BMR_POSEN | TC_BMR_EDGPHA ;
+ 
  //   TC2 -> TC_BMR = TC_BMR_QDEN | TC_BMR_POSEN | TC_BMR_EDGPHA ;
     TC2 -> TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0;
     TC2 -> TC_CHANNEL[0].TC_CCR = TC_CCR_CLKEN | TC_CCR_SWTRG;
-    REG_TC2_BMR = TC_BMR_QDEN | TC_BMR_POSEN | TC_BMR_EDGPHA ;
+   
+
+    uint32_t bmr = REG_TC2_BMR;
+
+    printf("bmr: %x \r\n", bmr);
+
+    uint32_t wpm = REG_TC2_WPMR;
+    printf("wpmr: %x \r\n", wpm);
   
     
 }
@@ -54,14 +68,7 @@ uint32_t read_encoder(){
 
     volatile uint32_t cv  = TC2->TC_CHANNEL[0].TC_CV;   // posisjon
    // printf("QDEC: CV=%lu ", cv);
-    uint32_t bmr = REG_TC2_BMR;
 
-    
-
-    printf("bmr: %x \r\n", bmr);
-
-    uint32_t wpm = TC2 -> TC_WPMR;
-    printf("wpmr: %x \r\n", wpm);
     
   //  PIOC -> PIO_ODR = PIO_ODR_P26 | PIO_ODR_P25; 
 
