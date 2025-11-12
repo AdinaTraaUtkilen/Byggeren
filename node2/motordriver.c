@@ -11,15 +11,18 @@ void pwm_motor_driver(){ // motor
     // sette duty cycle
     REG_PWM_CMR0 = PWM_CMR_CPRE_MCK_DIV_32 ; // PWM channel mode reg - left aligned - masterclock/32
     REG_PWM_CPRD0 = 131; // PWM channel period reg
-    REG_PWM_CDTY0 = 131- 10; // PWM channel duty cycle reg
+    REG_PWM_CDTY0 = 131 - 10; // PWM channel duty cycle reg
 
     PWM -> PWM_ENA = PWM_ENA_CHID0; // enable channel 0
 
     //phase dir pin
     PMC -> PMC_PCER0  |= (1u << ID_PIOC);
     PIOC -> PIO_PER = PIO_PC23;
-    PIOC -> PIO_OER = PIO_PC23;
-    
+    PIOC -> PIO_OER = PIO_PC23;  
+
+
+
+  
 
 }
 
@@ -54,16 +57,8 @@ void encoder_driver_init(){
 }
 
 
-
 uint32_t read_encoder(){
-   // PIOC -> PIO_OER = PIO_OER_P26 | PIO_OER_P25; 
-
     volatile uint32_t cv  = TC2->TC_CHANNEL[0].TC_CV;   // posisjon
-   // printf("QDEC: CV=%lu ", cv);
-
-    
-  //  PIOC -> PIO_ODR = PIO_ODR_P26 | PIO_ODR_P25; 
-
     return cv;
 }
 
@@ -92,7 +87,20 @@ void joystick_to_pwm_motor(CanMsg* message){
 }
 
 void position_controller(uint32_t encoder_value, CanMsg* message){
-    uint32_t encoder_pos;
-    uint32_t error = message->byte[0] - encoder_pos;
+    float encoder_pos = (float)encoder_value / 28.0f; // 5610 / 200 span speed
+    
+    // encoder value [200, 0]
+    printf("encoder_pos %.2f \r\n", encoder_pos);
+    printf("x pos %d \r\n", message->byte[0]);
+
+    float error = message->byte[0] - encoder_pos;
+    float k_p;
+    float p_part = k_p * error;
+
+    float k_i;
+    float i_part;
+
+    float pi_reg = p_part + i_part;
+
 
 }

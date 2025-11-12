@@ -58,7 +58,7 @@ int main()
  
  
   send_joystick_pos(&m);
-  _delay_ms(200);
+ // _delay_ms(200);
  
  }
   return 0;

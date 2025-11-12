@@ -14,11 +14,9 @@ void pwm_driver(){
 
 
   void servo_driver(){
-   
     REG_PWM_CMR1 = PWM_CMR_CPRE_MCK_DIV_32 ; // PWM channel mode reg - left aligned - masterclock/32
     REG_PWM_CPRD1 = 52500; // PWM channel period reg
     REG_PWM_CDTY1 = 52500 - 2370; // PWM channel duty cycle reg
-    //REG_PWM_CDTYUPD1 =3938; // update
     PWM -> PWM_ENA = PWM_ENA_CHID1; // enable register
 
   }
@@ -39,7 +37,7 @@ void pwm_driver(){
         REG_PWM_CDTY1 = reg_duty_cycle;
    
     }
-        // printf("Reg PWM verdi: %d ", REG_PWM_CDTY1 ); 
+        
 }
 
 

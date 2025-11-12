@@ -139,6 +139,6 @@ void position_update(uint8_t volatile *jx,uint8_t volatile *jy,uint8_t volatile 
     pos_calibrate(jx, jy, tx, ty, pos);
     pos_direction(pos, d);
  //   pos_print(pos, d);
-    printf("jeg er her, pos_update \r\n");
+   // printf("jeg er her, pos_update \r\n");
   
 }

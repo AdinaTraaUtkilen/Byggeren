@@ -64,10 +64,12 @@ int main()
 
         if(read_can){
             //can_printmsg(rx);
-            //printf("\r\n");
+          //  printf("\r\n");
             joystick_to_pwm_servo(&rx);
             joystick_to_pwm_motor(&rx);
         }
+
+        position_controller(encoder_value, &rx);
 
         uint16_t ir_signal = ir_read();
         float ir_filtered = ir_filter_signal(ir_signal);
