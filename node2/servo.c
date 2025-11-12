@@ -4,7 +4,7 @@
 #define F_CPU 84000000
 
 
-void pwm_servo_driver(){
+void pwm_driver(){
     PMC -> PMC_PCER0 |= (1 << ID_PIOB);
     PMC -> PMC_PCER1 = PMC_PCER1_PID36;// enable peripheral clock signal - 36
     PIOB -> PIO_PDR = PIO_PDR_P13; // disable PIO
@@ -43,9 +43,9 @@ void pwm_servo_driver(){
 }
 
 
-void joystick_to_pwm(CanMsg* message){
-    uint8_t joystick_x= message->byte[0];  
-    uint16_t D_tic = 52500 - (13*joystick_x) - 2625;
+void joystick_to_pwm_servo(CanMsg* message){
+    uint8_t joystick_y= message->byte[1];  
+    uint16_t D_tic = 52500 - (13*joystick_y) - 2625;
     check_min_max(D_tic);
     
 }

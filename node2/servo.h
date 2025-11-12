@@ -12,4 +12,4 @@ void servo_driver();
 void check_min_max(uint16_t reg_duty_cycle);
 
 
-void joystick_to_pwm(CanMsg* message);
+void joystick_to_pwm_servo(CanMsg* message);

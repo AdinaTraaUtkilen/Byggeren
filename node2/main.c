@@ -44,9 +44,10 @@ int main()
 
     can_init( init, rxInterrupt);
 
-    pwm_servo_driver();
+    pwm_driver();
     servo_driver();
     encoder_driver_init();
+    pwm_motor_driver();
     ir_init();
     CanMsg rx;
     
@@ -56,7 +57,7 @@ int main()
     {
 
         uint32_t encoder_value = read_encoder();
-       // printf("ENCODER VALUE : %d \r\n", encoder_value);
+        printf("ENCODER VALUE : %d \r\n", encoder_value);
 
 
         uint8_t read_can = can_rx(&rx);
@@ -64,14 +65,13 @@ int main()
         if(read_can){
             //can_printmsg(rx);
             //printf("\r\n");
-            joystick_to_pwm(&rx);
+            joystick_to_pwm_servo(&rx);
+            joystick_to_pwm_motor(&rx);
         }
-
 
         uint16_t ir_signal = ir_read();
         float ir_filtered = ir_filter_signal(ir_signal);
         float ir_filtered_volt =  ir_filtered * 3.3f / 4095.0f;
-
 
      //   printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
         uint8_t score = update_game(ir_filtered_volt);
