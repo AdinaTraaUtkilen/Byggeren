@@ -46,8 +46,9 @@ int main()
 
     pwm_driver();
     servo_driver();
-    encoder_driver_init();
     pwm_motor_driver();
+    encoder_driver_init();
+   
     ir_init();
     CanMsg rx;
     
