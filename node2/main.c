@@ -16,19 +16,14 @@
 #include "servo.h"
 #include "ir.h"
 #include "motordriver.h"
+#include "pi.h"
 
 
 
-/*
- * Remember to update the Makefile with the (relative) path to the uart.c file.
- * This starter code will not compile until the UART file has been included in the Makefile. 
- * If you get somewhat cryptic errors referencing functions such as _sbrk, 
- * _close_r, _write_r, _fstat etc, you have most likely not done that correctly.
 
- * If you get errors such as "arm-none-eabi-gcc: no such file", you may need to reinstall the arm gcc packages using
- * apt or your favorite package manager.
- */
-//#include "../path_to/uart.h"
+volatile uint32_t pid_flag = 0;
+
+
 
 int main()
 {
@@ -36,7 +31,7 @@ int main()
 
     CanInit init={0};
     uint8_t rxInterrupt=0;
-
+   
 
     WDT->WDT_MR = WDT_MR_WDDIS; // disable Watchdog Timer
 
@@ -51,17 +46,19 @@ int main()
    
     ir_init();
     CanMsg rx;
-    
 
-    
+    pid_timer_init();
+
+
     while (1)
     {
 
-        uint32_t encoder_value = read_encoder();
-        printf("ENCODER VALUE : %d \r\n", encoder_value);
-
-
+        int32_t encoder_value = read_encoder();
+        
         uint8_t read_can = can_rx(&rx);
+        uint32_t encoder_pos = encoder_pos_func(encoder_value);
+
+        printf("encoder %d vs joystick %d \r\n", encoder_pos, rx.byte[0]);
 
         if(read_can){
             //can_printmsg(rx);
@@ -70,7 +67,7 @@ int main()
             joystick_to_pwm_motor(&rx);
         }
 
-        position_controller(encoder_value, &rx);
+        
 
         uint16_t ir_signal = ir_read();
         float ir_filtered = ir_filter_signal(ir_signal);
@@ -79,8 +76,16 @@ int main()
      //   printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
         uint8_t score = update_game(ir_filtered_volt);
 
-        //printf("score tid er naa: %d \r\n ", score);
 
+        if(pid_flag){
+            pid_flag = 0; // clear flagg
+
+            int32_t enc = encoder_pos;
+            CanMsg current_ref = rx;
+
+            position_controller(enc, &current_ref);
+
+        }
 
     }
     

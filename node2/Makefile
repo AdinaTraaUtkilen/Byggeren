@@ -13,7 +13,8 @@ SOURCE_FILES = \
 	servo.c \
 	ir.c \
 	startcode/time.c \
-	motordriver.c
+	motordriver.c \
+	pi.c
 
 # Feel free to ignore anything below this line
 VPATH:= $(dir $(SOURCE_FILES))
