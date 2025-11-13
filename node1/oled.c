@@ -258,7 +258,7 @@ void change_page(volatile pages *page,volatile  homescreen_arrow *arrow, volatil
         oled_clear_all();
         oled_print_str("Lets go!", 3, 30, 8);
         
-        led_play();
+        //led_play();
         
     
         *page = PLAY;
@@ -269,7 +269,7 @@ void change_page(volatile pages *page,volatile  homescreen_arrow *arrow, volatil
         oled_print_str("1.", 2, 0, 4);
         oled_print_str("2.", 4, 0, 4);
         oled_print_str("3.", 6, 0, 4);
-        led_play();
+      //  led_play();
    
         *page = SCOREBOARD;
         break;

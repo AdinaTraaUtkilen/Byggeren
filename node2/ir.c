@@ -31,9 +31,10 @@ uint16_t ir_read(){
 
 //ema filter digitalt lavpass som glatter ut
 float ir_filter_signal(uint16_t ir_signal){
-
+ 
     ir_filtered_signal = ((1 - alpha)*ir_filtered_signal) + (alpha * ir_signal);
-    return ir_filtered_signal;
+    float ir_filtered_volt =  ir_filtered_signal * 3.3f / 4095.0f;
+    return ir_filtered_volt;
 
 
 }

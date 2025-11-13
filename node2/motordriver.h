@@ -13,8 +13,6 @@ void encoder_driver_init();
 
 uint32_t read_encoder();
 
-//void motor_driver();
-
 void joystick_to_pwm_motor(CanMsg* message);
 
 void position_controller(uint32_t encoder_value, CanMsg* message);

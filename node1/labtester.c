@@ -122,7 +122,7 @@ void menu_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty, volatile pos_t *
   }
   home_button(btn, page,arrow);
  
-  _delay_ms(50);
+ // _delay_ms(50);
   
 }
 

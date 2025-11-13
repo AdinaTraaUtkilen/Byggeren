@@ -14,7 +14,8 @@ SOURCE_FILES = \
 	ir.c \
 	startcode/time.c \
 	motordriver.c \
-	pi.c
+	pi.c \
+	soleniod.c
 
 # Feel free to ignore anything below this line
 VPATH:= $(dir $(SOURCE_FILES))

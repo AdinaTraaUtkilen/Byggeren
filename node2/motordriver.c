@@ -56,13 +56,13 @@ void encoder_driver_init(){
     while (last_encoder_value != encoder_value)
     {
         PIOC -> PIO_CODR = PIO_PC23; // set dir forward
-        REG_PWM_CDTYUPD0 = 131-50; // PWM channel duty cycle reg
+        REG_PWM_CDTYUPD0 = REG_PWM_CPRD0 - 50; // PWM channel duty cycle reg
         last_encoder_value = encoder_value;
         for (volatile uint32_t i=0; i<200000; ++i) __asm__("nop");
         encoder_value = read_encoder();
     }
     
-    REG_PWM_CDTYUPD0 = 131 - 10; // PWM channel duty cycle reg
+    REG_PWM_CDTYUPD0 = REG_PWM_CPRD0 - 10; // PWM channel duty cycle reg
 
     TC2 -> TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0;
     TC2 -> TC_CHANNEL[0].TC_CCR = TC_CCR_CLKEN | TC_CCR_SWTRG;
@@ -80,17 +80,17 @@ void joystick_to_pwm_motor(CanMsg* message){
     uint8_t joystick_x= message->byte[0];
     if (joystick_x < 100){
         PIOC -> PIO_CODR = PIO_PC23; // set dir backwards
-        uint32_t speed = 131 - joystick_x;
-        REG_PWM_CDTYUPD0 = 131 - speed;
+        uint32_t speed = REG_PWM_CPRD0 - joystick_x;
+        REG_PWM_CDTYUPD0 = REG_PWM_CPRD0 - speed;
 
     }
     else if(joystick_x > 110){
         
         PIOC -> PIO_SODR = PIO_PC23; // set dir forward
         uint32_t speed = (joystick_x - 80);
-        REG_PWM_CDTYUPD0 = 131 - speed;
+        REG_PWM_CDTYUPD0 = REG_PWM_CPRD0 - speed;
     } else {
-        REG_PWM_CDTYUPD0 = 131 - 10;
+        REG_PWM_CDTYUPD0 = REG_PWM_CPRD0 - 10;
     }
 
     
@@ -102,12 +102,12 @@ uint32_t encoder_pos_func(int32_t encoder_value){
         encoder_pos = 0;
 
     } else{
-        encoder_pos =  (uint32_t)floorf(encoder_value / 28); // 5610 / 200 span speed
+        encoder_pos =  (uint32_t)floorf(encoder_value / 28); // 5610 / 200 span speed (var 28)
     }
     
-    return encoder_pos + 10;
-}
+    return encoder_pos ;
 
+}
 
 
 
@@ -122,10 +122,10 @@ void pi_motor_set_cdty(float u)
         PIOC->PIO_CODR = PIO_PC23; // set dir backward
         u = -u;
     }
-    printf("u : %f \r\n", u);
+   // printf("u : %f \r\n", u);
 
     uint32_t duty =(uint32_t)(u);
-    printf("dutyyyy %d \r\n", duty);
+   // printf("dutyyyy %d \r\n", duty);
  
-    REG_PWM_CDTYUPD0 = 131 - duty;
+    REG_PWM_CDTYUPD0 = REG_PWM_CPRD0 - duty;
 }

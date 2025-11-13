@@ -6,8 +6,8 @@ extern volatile uint32_t pid_flag;
 
 
 
-float k_p = 0.5f;
-float k_i = 0.1f;
+float k_p = 0.8f;
+float k_i = 0.4f;
 float integral = 0;
 
 
@@ -22,7 +22,7 @@ void pid_timer_init(){
                | TC_CMR_WAVE                  // waveform mode
                | TC_CMR_WAVSEL_UP_RC;         // count up to RC, then reset
 
-    ch->TC_RC = 6563;                         // ~10 ms period
+    ch->TC_RC = 6563;                         // 10 ms period
 
     ch->TC_IER = TC_IER_CPCS;           // Enable interrupt on RC compare
 
@@ -55,29 +55,39 @@ void TC0_Handler(){
 void position_controller(uint32_t encoder_pos, CanMsg* message){
     int32_t error = message->byte[0] - encoder_pos;
 
-    printf("error : %d \r\n", error);
+ //   printf("error : %d \r\n", error);
 
     float p_part=k_p*error;
 
-    int32_t max_integral  = 200;
-    int32_t min_integral = -200;
+    float max_output  = 131.0f;
+    float min_output = -131.0f;
 
-    if (integral >= max_integral ){
-        integral=max_integral;
-    }
-    else if (integral <= min_integral){
-        integral = min_integral;
-    }
-    else {
+    float i_part = k_i * integral;
+    float u_temp = p_part + i_part;
+
+    if ((u_temp < max_output && u_temp > min_output)||(u_temp >= max_output && error < 0)||(u_temp <= min_output && error > 0)) {
         integral = integral + error;
     }
+
+    int32_t max_integral = 20;
+    int32_t min_integral = -20;
+
+    if (integral >= max_integral)
+    {
+        integral = max_integral;
+    } else if (integral <= min_integral)
+    {
+        integral = min_integral;
+    }
+
+    i_part = k_i*integral;
     
-    float i_part = k_i * integral;
-    printf("print p part %f \r\n", p_part);
-    printf("print i part %f \r\n", i_part);
+    
+   // printf("print p part %f \r\n", p_part);
+   // printf("print i part %f \r\n", i_part);
 
     float u = p_part + i_part;
-
+    
    
     pi_motor_set_cdty(u);
 
