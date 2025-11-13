@@ -19,7 +19,7 @@ void adc_init(void){
     for (size_t i = 0; i < 4; i++)
     {
     adc_read_init();
-    printf("jeg er her, adc_init \r\n");
+  //  printf("jeg er her, adc_init \r\n");
 
    volatile uint8_t junk;
    junk = ADC_BASE[0];   // leser posisjon fra adc med 4 channels

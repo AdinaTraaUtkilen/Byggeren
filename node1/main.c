@@ -55,6 +55,7 @@ int main()
  while (1)
  {  
   menu_test(&jx, &jy,&tx, &ty, &pos, &d, &btn, &page, &arrow);
+  
  
  
   send_joystick_pos(&m);
