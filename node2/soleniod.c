@@ -18,11 +18,12 @@ void run_soleniod(CanMsg* message){
     uint32_t buttons = PIOA -> PIO_PDSR;
    
     if((buttons & btn_pressed) != 0){
-        // printf("trykket naa \r\n");
+        printf("");
         PIOA -> PIO_CODR = PIO_PA24;
         // aktiv lav litt, pulseee
-       for (volatile uint32_t i=0; i<100000; ++i);
+        for (volatile uint32_t i=0; i<500000; ++i)__asm__("nop");
         PIOA -> PIO_SODR = PIO_PA24;
+        for (volatile uint32_t i=0; i<500000; ++i)__asm__("nop");
 
     } 
 };

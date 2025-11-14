@@ -117,6 +117,14 @@ void menu_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty, volatile pos_t *
       oled_change_arrow(d, arrow);
   }
 
+  // for å se score
+  
+
+  if(*page == PLAY){
+    //  oled_update_score(current_score);
+  }
+  
+
   if (pos->btn_pressed == 1){
     change_page(page, arrow, btn);
   }

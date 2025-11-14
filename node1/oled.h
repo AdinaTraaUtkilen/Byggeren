@@ -50,6 +50,8 @@ void home_button(volatile Buttons *btn, volatile pages *page, volatile homescree
 void led_play();
 void led_scoreboard();
 
+void oled_update_score(uint8_t score);
+
 /*
 
 

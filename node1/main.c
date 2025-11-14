@@ -28,7 +28,7 @@ volatile Buttons btn;
 volatile homescreen_arrow arrow = PLAY_A;
 volatile pages page = HOME;
 
-
+volatile uint8_t current_score = 0;
 
 
 int main()
@@ -57,8 +57,24 @@ int main()
   menu_test(&jx, &jy,&tx, &ty, &pos, &d, &btn, &page, &arrow);
   
  
- 
-  send_joystick_pos(&m);
+  if (page == PLAY){
+    send_joystick_pos(&m);
+  }
+  
+  
+
+  // recieve score from node 2
+
+  can_message score_rx;
+   printf("faar melding %d \r\n", can_message_receive(&score_rx));
+  
+  if (can_message_receive(&score_rx)){
+   
+    if (score_rx.id == 0x24){
+      current_score = score_rx.data[0];
+      printf("current score %d \r\n", current_score);
+    }
+  }
 
  
  }

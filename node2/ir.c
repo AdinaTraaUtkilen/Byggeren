@@ -40,7 +40,7 @@ float ir_filter_signal(uint16_t ir_signal){
 }
 
 uint8_t update_game(float ir_signal){
-    if (ir_signal < 0.60f){
+    if (ir_signal < 2.49f){
         passed = 1;
         if (passed && last_passed == 0)
         {

@@ -19,7 +19,7 @@ void pwm_motor_driver(){ // motor
     PIOC -> PIO_PER = PIO_PC23;
     PIOC -> PIO_OER = PIO_PC23;  
 
-
+    PIOC->PIO_SODR = PIO_PC23;
 
   
 
@@ -50,8 +50,8 @@ void encoder_driver_init(){
     REG_TC2_BMR = TC_BMR_QDEN | TC_BMR_POSEN | TC_BMR_EDGPHA ;
 
     
-    uint32_t last_encoder_value = 10;
-    uint32_t encoder_value = read_encoder();
+    int32_t last_encoder_value = 10;
+    int32_t encoder_value = read_encoder();
 
     while (last_encoder_value != encoder_value)
     {
@@ -70,8 +70,8 @@ void encoder_driver_init(){
 }
 
 
-uint32_t read_encoder(){
-    volatile uint32_t cv  = TC2->TC_CHANNEL[0].TC_CV * (-1);   // posisjon
+int32_t read_encoder(){
+    volatile int32_t cv  = (int32_t)TC2->TC_CHANNEL[0].TC_CV * (-1);   // posisjon
     return cv;
 }
 
@@ -97,14 +97,14 @@ void joystick_to_pwm_motor(CanMsg* message){
 }
 
 uint32_t encoder_pos_func(int32_t encoder_value){
-    uint32_t encoder_pos;
-    if(encoder_value < 0){
+    int32_t encoder_pos;
+    if (encoder_value < 0){
         encoder_pos = 0;
 
     } else{
-        encoder_pos =  (uint32_t)floorf(encoder_value / 28); // 5610 / 200 span speed (var 28)
+        encoder_pos =  (uint32_t)floorf((float)(encoder_value / 28)); // 5610 / 200 span speed (var 28)
     }
-    
+    printf("encoder: %d \r\n", encoder_pos);
     return encoder_pos ;
 
 }
@@ -126,6 +126,7 @@ void pi_motor_set_cdty(float u)
 
     uint32_t duty =(uint32_t)(u);
    // printf("dutyyyy %d \r\n", duty);
+   
  
     REG_PWM_CDTYUPD0 = REG_PWM_CPRD0 - duty;
 }

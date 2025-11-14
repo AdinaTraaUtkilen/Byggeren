@@ -286,3 +286,31 @@ void home_button(volatile Buttons *btn, volatile pages *page, volatile homescree
 
     }
 }
+
+void oled_update_score(uint8_t score){
+
+    uint8_t last_displayed_score = 255; // Initialize to impossible value
+
+    if (score != last_displayed_score) {
+// Clear the score area (page 0, columns 90-128)
+    oled_goto_page(0);
+    oled_goto_column(90);
+    for (uint8_t i = 0; i < 38; i++) {
+    oled_write_data(0x00);
+    }
+    // Print "Score: XX"
+    oled_print_str("Score:", 0, 90, 4);
+    // Convert score to string and display
+    char score_str[4];
+    if (score < 10) {
+    score_str[0] = '0' + score;
+    score_str[1] = '\0';
+    } else {
+    score_str[0] = '0' + (score / 10);
+    score_str[1] = '0' + (score % 10);
+    score_str[2] = '\0';
+    }
+    oled_print_str(score_str, 0, 116, 4);
+    last_displayed_score = score;
+}
+}

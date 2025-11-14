@@ -22,7 +22,7 @@
 
 
 volatile uint32_t pid_flag = 0;
-
+#define expected_can_id 0x23
 
 
 int main()
@@ -45,6 +45,7 @@ int main()
    
     ir_init();
     CanMsg rx;
+    uint8_t rx_ok = 0;
 
     pid_timer_init();
     soleniod_init();
@@ -60,10 +61,14 @@ int main()
         uint8_t read_can = can_rx(&rx);
 
         if(read_can){
-            //can_printmsg(rx);
-          //  printf("\r\n");
-            joystick_to_pwm_servo(&rx);
-         //   joystick_to_pwm_motor(&rx);
+            if (rx.id == expected_can_id)
+            {
+                rx_ok = 1;
+                joystick_to_pwm_servo(&rx);
+            } else{
+                can_printmsg(rx);
+                printf("\r\n");
+            }
         }
 
         
@@ -71,18 +76,32 @@ int main()
         uint16_t ir_signal = ir_read();
         float ir_filtered_volt = ir_filter_signal(ir_signal);
 
-      //  printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
+    //    printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
         uint8_t score = update_game(ir_filtered_volt);
+        printf("score = %d \r\n", score);
 
-
-        if(pid_flag){
-            pid_flag = 0; // clear flagg
-            int32_t enc = encoder_pos;
-            CanMsg current_ref = rx;
-            position_controller(enc, &current_ref);
+        uint8_t last_score = 0;
+        if (score != last_score){
+            CanMsg score_msg = {
+                .id = 0x24,
+                .length = 1,
+                .byte = {score},
+            };
+            can_tx(score_msg);
+            last_score = score;
         }
 
-       run_soleniod(&rx);
+        if(pid_flag & rx_ok){
+            pid_flag = 0; // clear flagg
+          //  int32_t enc = encoder_pos;
+           // CanMsg current_ref = rx;
+            position_controller(encoder_pos, &rx);
+        }
+
+        if(rx_ok){
+            run_soleniod(&rx);
+        }
+       
 
     }
     

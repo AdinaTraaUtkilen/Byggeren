@@ -6,8 +6,8 @@ extern volatile uint32_t pid_flag;
 
 
 
-float k_p = 0.8f;
-float k_i = 0.4f;
+float k_p = 0.4f;
+float k_i = 0.5f;
 float integral = 0;
 
 
@@ -49,33 +49,52 @@ void TC0_Handler(){
 }
 
 
+float map_joystick(uint8_t js){
+    float js_min = 10;
+    float js_max =210;
+    float encoder_span=200;
+
+    float normalized = (js-js_min)/(js_max-js);
+
+    if (normalized < 0) normalized = 0;
+    if (normalized > 1) normalized =1;
+
+    return normalized * encoder_span;
+}
 
 
 
 void position_controller(uint32_t encoder_pos, CanMsg* message){
-    int32_t error = message->byte[0] - encoder_pos;
+    //float mapped_joystick = map_joystick(message->byte[0]);
+    int32_t error = (int32_t)message->byte[0] - (int32_t)encoder_pos;
 
- //   printf("error : %d \r\n", error);
+ printf("error : %d \r\n", error);
 
-    float p_part=k_p*error;
+    float p_part=k_p * (float)error;
 
     float max_output  = 131.0f;
     float min_output = -131.0f;
 
+    float prospective_integral = integral + ((float)error + PI_DT);
+    float prospective_i_part = k_i * prospective_integral;
+    float u_prospective = p_part + prospective_i_part;
+
     float i_part = k_i * integral;
-    float u_temp = p_part + i_part;
 
-    if ((u_temp < max_output && u_temp > min_output)||(u_temp >= max_output && error < 0)||(u_temp <= min_output && error > 0)) {
-        integral = integral + error;
+
+    if ((u_prospective < max_output && u_prospective> min_output)||
+        (u_prospective >= max_output && error < 0)||
+        (u_prospective <= min_output && error > 0)) {
+        integral = prospective_integral;
     }
+    const int32_t max_integral = 50;
+    const int32_t min_integral = -50;
 
-    int32_t max_integral = 20;
-    int32_t min_integral = -20;
 
-    if (integral >= max_integral)
+    if (integral > max_integral)
     {
         integral = max_integral;
-    } else if (integral <= min_integral)
+    } else if (integral < min_integral)
     {
         integral = min_integral;
     }
@@ -88,6 +107,7 @@ void position_controller(uint32_t encoder_pos, CanMsg* message){
 
     float u = p_part + i_part;
     
+    printf("U : %f \r\n", u);
    
     pi_motor_set_cdty(u);
 

@@ -24,3 +24,4 @@ extern volatile dir d;
 extern volatile uint8_t control_flag;
 extern volatile homescreen_arrow arrow;
 extern volatile pages page;
+extern volatile uint8_t current_score;
