@@ -20,4 +20,3 @@ void TC0_Handler();
 
 void position_controller(uint32_t encoder_pos, CanMsg* message);
 
-float map_joystick(uint8_t js);

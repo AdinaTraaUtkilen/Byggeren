@@ -89,10 +89,7 @@ void can_tx(CanMsg m){
     m.length = m.length > 8 ? 8 : m.length;
     
     //  Put message in can data registers
-    CAN0->CAN_MB[txMailbox].
-#define txMailbox 0
-#define rxMailbox 1
-CAN_MDL = m.dword[0];
+    CAN0->CAN_MB[txMailbox].CAN_MDL = m.dword[0];
     CAN0->CAN_MB[txMailbox].CAN_MDH = m.dword[1];
         
     // Set message length and mailbox ready to send

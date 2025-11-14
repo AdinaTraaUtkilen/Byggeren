@@ -56,22 +56,24 @@ int main()
 
         int32_t encoder_value = read_encoder();
         uint32_t encoder_pos = encoder_pos_func(encoder_value);
-        printf("encoder %d vs joystick %d \r\n", encoder_pos, rx.byte[0]);
-       
-        uint8_t read_can = can_rx(&rx);
 
+        uint8_t read_can = can_rx(&rx);
+        printf("encoder %d vs joystick %d \r\n", encoder_pos, rx.byte[0]);
+  
+        
         if(read_can){
             if (rx.id == expected_can_id)
             {
                 rx_ok = 1;
                 joystick_to_pwm_servo(&rx);
+              //  can_printmsg(rx);
+              //  printf("\r\n");
+                run_soleniod(&rx);
             } else{
                 can_printmsg(rx);
                 printf("\r\n");
             }
         }
-
-        
 
         uint16_t ir_signal = ir_read();
         float ir_filtered_volt = ir_filter_signal(ir_signal);
@@ -80,29 +82,16 @@ int main()
         uint8_t score = update_game(ir_filtered_volt);
         printf("score = %d \r\n", score);
 
-        /*
-        
-        if (score == 3){
-            CanMsg score_msg = {
-                .id = 0x24,
-                .length = 1,
-                .byte = {score},
-            };
-            can_tx(score_msg);
-            printf("du har brukt opp dine 3 liv");
-            
-        }*/
 
         if(pid_flag){
             pid_flag = 0; // clear flagg
-          //  int32_t enc = encoder_pos;
-           // CanMsg current_ref = rx;
-            position_controller(encoder_pos, &rx);
+            int32_t enc = encoder_pos;
+            CanMsg current_ref = rx;
+            position_controller(enc, &current_ref);
         }
 
       
-        run_soleniod(&rx);
-       
+        
 
     }
     

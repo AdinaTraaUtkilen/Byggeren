@@ -19,9 +19,6 @@ void pwm_motor_driver(){ // motor
     PIOC -> PIO_PER |= PIO_PC23;
     PIOC -> PIO_OER |= PIO_PC23;  
 
-   //PIOC->PIO_SODR = PIO_PC23;
-
-  
 
 }
 
@@ -31,10 +28,10 @@ void encoder_driver_init(){
         printf("Operation not permittted");
     }
 
-    PMC -> PMC_PCER0 |= (1 << ID_PIOA);
-    PMC -> PMC_PCER0 |= (1 << ID_PIOC);
+ //   PMC -> PMC_PCER0 |= (1 << ID_PIOA);
+   // PMC -> PMC_PCER0 |= (1 << ID_PIOC);
 
-   // PMC-> PMC_PCER1 |= (1 << (ID_TC6 - 32)) | (1 << (ID_TC7 - 32)) ;
+    PMC-> PMC_PCER1 |= (1 << (ID_TC6 - 32)) | (1 << (ID_TC7 - 32)) ;
 
 
     PMC -> PMC_PCER0 |= PMC_PCER0_PID29; //klokke for TC28
@@ -74,8 +71,8 @@ void encoder_driver_init(){
 
 
 uint32_t read_encoder(){
-    volatile uint32_t cv  = TC2->TC_CHANNEL[0].TC_CV * (-1);   // posisjon
-    return cv;
+    volatile int32_t cv  = (int32_t)TC2->TC_CHANNEL[0].TC_CV;   // posisjon
+    return (uint32_t)(-cv);
 }
 
 void joystick_to_pwm_motor(CanMsg* message){

@@ -50,7 +50,6 @@ void TC0_Handler(){
 
 
 
-
 void position_controller(uint32_t encoder_pos, CanMsg* message){
     int32_t error = (int32_t)message->byte[0] - (int32_t)encoder_pos;
 
