@@ -71,7 +71,7 @@ int main()
         uint16_t ir_signal = ir_read();
         float ir_filtered_volt = ir_filter_signal(ir_signal);
 
-     //   printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
+      //  printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
         uint8_t score = update_game(ir_filtered_volt);
 
 
