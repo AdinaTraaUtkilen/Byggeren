@@ -11,7 +11,7 @@ void pwm_motor_driver();
 
 void encoder_driver_init();
 
-int32_t read_encoder();
+uint32_t read_encoder();
 
 void joystick_to_pwm_motor(CanMsg* message);
 

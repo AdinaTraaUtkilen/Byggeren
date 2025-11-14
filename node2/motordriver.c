@@ -3,7 +3,7 @@
 void pwm_motor_driver(){ // motor
     PMC -> PMC_PCER0 |= (1 << ID_PIOB);
     PMC -> PMC_PCER1 |= PMC_PCER1_PID36;// enable peripheral clock signal - 36
-    PIOB -> PIO_PDR = PIO_PDR_P12; // disable PIO
+    PIOB -> PIO_PDR |= PIO_PDR_P12; // disable PIO
     PIOB -> PIO_ABSR |= PIO_ABSR_P12; // AB peripheral select
 
     
@@ -12,14 +12,14 @@ void pwm_motor_driver(){ // motor
     REG_PWM_CMR0 = PWM_CMR_CPRE_MCK_DIV_32 ; // PWM channel mode reg - left aligned - masterclock/32
     REG_PWM_CPRD0 = 131; // PWM channel period reg
     
-    PWM -> PWM_ENA = PWM_ENA_CHID0; // enable channel 0
+    PWM -> PWM_ENA |= PWM_ENA_CHID0; // enable channel 0
 
     //phase dir pin
     PMC -> PMC_PCER0  |= (1u << ID_PIOC);
-    PIOC -> PIO_PER = PIO_PC23;
-    PIOC -> PIO_OER = PIO_PC23;  
+    PIOC -> PIO_PER |= PIO_PC23;
+    PIOC -> PIO_OER |= PIO_PC23;  
 
-    PIOC->PIO_SODR = PIO_PC23;
+   //PIOC->PIO_SODR = PIO_PC23;
 
   
 
@@ -31,7 +31,10 @@ void encoder_driver_init(){
         printf("Operation not permittted");
     }
 
-    PMC-> PMC_PCER1 |= (1 << (ID_TC6 - 32)) | (1 << (ID_TC7 - 32)) ;
+    PMC -> PMC_PCER0 |= (1 << ID_PIOA);
+    PMC -> PMC_PCER0 |= (1 << ID_PIOC);
+
+   // PMC-> PMC_PCER1 |= (1 << (ID_TC6 - 32)) | (1 << (ID_TC7 - 32)) ;
 
 
     PMC -> PMC_PCER0 |= PMC_PCER0_PID29; //klokke for TC28
@@ -70,8 +73,8 @@ void encoder_driver_init(){
 }
 
 
-int32_t read_encoder(){
-    volatile int32_t cv  = (int32_t)TC2->TC_CHANNEL[0].TC_CV * (-1);   // posisjon
+uint32_t read_encoder(){
+    volatile uint32_t cv  = TC2->TC_CHANNEL[0].TC_CV * (-1);   // posisjon
     return cv;
 }
 

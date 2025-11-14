@@ -49,26 +49,12 @@ void TC0_Handler(){
 }
 
 
-float map_joystick(uint8_t js){
-    float js_min = 10;
-    float js_max =210;
-    float encoder_span=200;
-
-    float normalized = (js-js_min)/(js_max-js);
-
-    if (normalized < 0) normalized = 0;
-    if (normalized > 1) normalized =1;
-
-    return normalized * encoder_span;
-}
-
 
 
 void position_controller(uint32_t encoder_pos, CanMsg* message){
-    //float mapped_joystick = map_joystick(message->byte[0]);
     int32_t error = (int32_t)message->byte[0] - (int32_t)encoder_pos;
 
- printf("error : %d \r\n", error);
+    printf("error : %d \r\n", error);
 
     float p_part=k_p * (float)error;
 
