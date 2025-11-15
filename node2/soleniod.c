@@ -15,15 +15,12 @@ void soleniod_init(){
 
 void run_soleniod(CanMsg* message){
     uint8_t btn_pressed = message->byte[4];
-   // uint32_t buttons = PIOA -> PIO_PDSR;
    
     if(btn_pressed){
-        printf("");
+      //  printf("");
         PIOA -> PIO_CODR = PIO_PA24;
         // aktiv lav litt, pulseee
-        for (volatile uint32_t i=0; i<500000; ++i)__asm__("nop");
+    }else{
         PIOA -> PIO_SODR = PIO_PA24;
-        for (volatile uint32_t i=0; i<500000; ++i)__asm__("nop");
-
     } 
 };

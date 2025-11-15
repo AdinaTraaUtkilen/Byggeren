@@ -1,4 +1,4 @@
-build/soleniod.o: soleniod.c soleniod.h startcode/can.h \
+build/soleniod.o: soleniod.c soleniod.h startcode/time.h startcode/can.h \
  sam/sam3x/include/sam.h sam/sam3x/include/sam3x8e.h sam/cmsis/core_cm3.h \
  sam/cmsis/cmsis_version.h sam/cmsis/cmsis_compiler.h \
  sam/cmsis/cmsis_gcc.h sam/cmsis/mpu_armv7.h \

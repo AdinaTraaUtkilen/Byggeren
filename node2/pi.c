@@ -26,7 +26,7 @@ void pid_timer_init(){
 
     ch->TC_IER = TC_IER_CPCS;           // Enable interrupt on RC compare
 
-    REG_TC0_IER0 = (1 << TC_IER_COVFS); // compare
+  //  REG_TC0_IER0 = (1 << TC_IER_COVFS); // compare
 
     
     NVIC_ClearPendingIRQ(TC0_IRQn); //clear flag
@@ -51,9 +51,14 @@ void TC0_Handler(){
 
 
 void position_controller(uint32_t encoder_pos, CanMsg* message){
-    int32_t error = (int32_t)message->byte[0] - (int32_t)encoder_pos;
+    int32_t joystick_x = (int32_t)message->byte[0];
+    if(joystick_x > 200){
+        joystick_x = 200;
+    }
 
-    printf("error : %d \r\n", error);
+    int32_t error = joystick_x - (int32_t)encoder_pos;
+
+   // printf("error : %d \r\n", error);
 
     float p_part=k_p * (float)error;
 

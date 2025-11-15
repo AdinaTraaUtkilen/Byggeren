@@ -58,7 +58,7 @@ int main()
         uint32_t encoder_pos = encoder_pos_func(encoder_value);
 
         uint8_t read_can = can_rx(&rx);
-        printf("encoder %d vs joystick %d \r\n", encoder_pos, rx.byte[0]);
+        //printf("encoder %d vs joystick %d \r\n", encoder_pos, rx.byte[0]);
   
         
         if(read_can){
@@ -78,7 +78,7 @@ int main()
         uint16_t ir_signal = ir_read();
         float ir_filtered_volt = ir_filter_signal(ir_signal);
 
-    //    printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
+        printf("IR signal: %.3f\r\n", ir_filtered_volt); // i volt fra 12 bit siden ADCen er det
         uint8_t score = update_game(ir_filtered_volt);
         printf("score = %d \r\n", score);
 

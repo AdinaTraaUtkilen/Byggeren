@@ -104,7 +104,7 @@ uint32_t encoder_pos_func(int32_t encoder_value){
     } else{
         encoder_pos =  (uint32_t)floorf((float)(encoder_value / 28)); // 5610 / 200 span speed (var 28)
     }
-    printf("encoder: %d \r\n", encoder_pos);
+  //  printf("encoder: %d \r\n", encoder_pos);
     return encoder_pos ;
 
 }
