@@ -65,7 +65,7 @@ void position_controller(uint32_t encoder_pos, CanMsg* message){
     float max_output  = 131.0f;
     float min_output = -131.0f;
 
-    float prospective_integral = integral + ((float)error + PI_DT);
+    float prospective_integral = integral + ((float)error * PI_DT);
     float prospective_i_part = k_i * prospective_integral;
     float u_prospective = p_part + prospective_i_part;
 
