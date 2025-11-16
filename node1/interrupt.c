@@ -14,14 +14,13 @@ void init_interrupt(){
 
     MCUCR |= (1 << ISC2); // 
     
-    
     /*Enable INT2*/
     GICR |= (1 << INT2);
 
     sei();
-
-
 }
+
+
 
 
 ISR(INT2_vect){

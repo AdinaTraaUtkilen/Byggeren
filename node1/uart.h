@@ -2,8 +2,9 @@
 #include <stdint.h>
 
 
-void USART_Init( unsigned int ubrr );
-void USART_Transmit( char data );
+void USART_Init(unsigned int ubrr);
 
-char USART_Receive( void );
+void USART_Transmit(char data);
+
+char USART_Receive(void);
 

@@ -14,7 +14,6 @@
 
 
 void oled_init(){
-
     oled_write_command(0xAE); // display off 
 
     oled_write_command(0x20); //page adressing
@@ -68,19 +67,19 @@ void oled_goto_page(uint8_t page){
 
 }
 
+
+
 void oled_goto_column(uint8_t column){
     oled_write_command(0x00 | (column & 0x0F));
     oled_write_command(0x10 | ((column >> 4) & 0x0F));
 };
 
+
+
 void oled_clear_all(){
-
-    for (size_t i = 0; i < 8; i++)
-    {
+    for (size_t i = 0; i < 8; i++){
         oled_clear_page(i);
-       
     }
-
 }
 
 
@@ -88,17 +87,15 @@ void oled_clear_page(uint8_t page){
     oled_goto_page(page);
     oled_goto_column(0);
 
-    for (size_t i = 0; i < 128; i++)
-    {  
+    for (size_t i = 0; i < 128; i++){  
         oled_write_data(0x00);
-    }
-    
+    }   
 };
 
 
+
 void oled_clear_column(uint8_t column){
-     for (size_t i = 0; i < 128; i++)
-    {
+     for (size_t i = 0; i < 128; i++){
         oled_goto_page(i);
         oled_goto_column(column);
         oled_write_data(0x00);
@@ -113,10 +110,7 @@ void oled_pos(uint8_t page, uint8_t column){
 
 void oled_print_char(char c,uint8_t page, uint8_t column, uint8_t font){
     uint8_t index = font_index(c);
-
     oled_pos(page, column);
-
-
     switch (font)
     {
     case 8:
@@ -146,6 +140,7 @@ void oled_print_char(char c,uint8_t page, uint8_t column, uint8_t font){
     
 
 
+
 void oled_print_str(const char *str,uint8_t page, uint8_t column,uint8_t font){
     uint8_t i = 0;
     uint8_t current_col = column;
@@ -160,18 +155,21 @@ void oled_print_str(const char *str,uint8_t page, uint8_t column,uint8_t font){
             }
             oled_print_char(str[i], current_page, current_col, font);
     } else{
-        oled_print_char(str[i], current_page, current_col, font);
-        
+        oled_print_char(str[i], current_page, current_col, font);    
     }
     i++;
     current_col += 8;
+    }
 }
-}
+
+
 
 uint8_t font_index(char c) {
     if (c < 32 || c > 126) return 0; 
     return (uint8_t)(c - 32);
 }
+
+
 
 
 void oled_home(){
@@ -181,12 +179,11 @@ void oled_home(){
     oled_print_str("SCOREBOARD", 4, 0, 4);
 
     oled_print_arrow(2, 40);
-
 }
 
 
-void oled_change_arrow(volatile dir* d,  volatile homescreen_arrow* arrow){
 
+void oled_change_arrow(volatile dir* d,  volatile homescreen_arrow* arrow){
     switch (*d)
     {
     case DOWN:
@@ -196,7 +193,6 @@ void oled_change_arrow(volatile dir* d,  volatile homescreen_arrow* arrow){
             oled_print_arrow(4, 88);
             *arrow=SCOREBOARD_A;
         }
-   
         break;
 
         case UP:
@@ -240,7 +236,6 @@ void led_scoreboard(){
         led_on(i);
         _delay_ms(2);
     }
-    
     _delay_ms(40);
     
     for (size_t i=6; i>=0; i--){
@@ -257,12 +252,11 @@ void change_page(volatile pages *page,volatile  homescreen_arrow *arrow, volatil
     case PLAY_A:
         oled_clear_all();
         oled_print_str("Lets go!", 3, 30, 8);
-        
         //led_play();
-        
     
         *page = PLAY;
         break;
+
     case SCOREBOARD_A:
         oled_clear_all();
         oled_print_str("SCOREBOARD", 0, 20, 8);
@@ -283,12 +277,10 @@ void home_button(volatile Buttons *btn, volatile pages *page, volatile homescree
         oled_home();
         *page = HOME;
         *arrow = PLAY_A;
-
     }
 }
 
 void oled_update_score(uint8_t score){
-
     uint8_t last_displayed_score = 255; // Initialize to impossible value
 
     if (score != last_displayed_score) {

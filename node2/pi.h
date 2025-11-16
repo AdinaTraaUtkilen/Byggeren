@@ -10,13 +10,11 @@
 
 
 
-
 void position_controller(uint32_t encoder_value, CanMsg* message);
 
 void pid_timer_init();
 
 void TC0_Handler();
-
 
 void position_controller(uint32_t encoder_pos, CanMsg* message);
 

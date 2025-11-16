@@ -1,11 +1,7 @@
 #include "pi.h"
 
-
 extern volatile uint32_t pid_flag;
 #define PI_DT 0.01f    // sampling time in seconds
-
-
-
 float k_p = 0.4f;
 float k_i = 0.5f;
 float integral = 0;
@@ -17,7 +13,7 @@ void pid_timer_init(){
     TcChannel *ch = &TC0->TC_CHANNEL[0]; // use TC0 channel 0
 
     //Clock: TIMER_CLOCK4 = MCK/128 = 84 MHz / 128 = 656250 Hz
-    //We want 100 Hz → RC = 656250 / 100 ≈ 6563
+    //We want 100 Hz -> RC = 656250 / 100 ≈ 6563
     ch->TC_CMR = TC_CMR_TCCLKS_TIMER_CLOCK4   // clock source
                | TC_CMR_WAVE                  // waveform mode
                | TC_CMR_WAVSEL_UP_RC;         // count up to RC, then reset
@@ -28,7 +24,6 @@ void pid_timer_init(){
 
   //  REG_TC0_IER0 = (1 << TC_IER_COVFS); // compare
 
-    
     NVIC_ClearPendingIRQ(TC0_IRQn); //clear flag
 
     NVIC_EnableIRQ(TC0_IRQn); //enable
@@ -55,10 +50,7 @@ void position_controller(uint32_t encoder_pos, CanMsg* message){
     if(joystick_x > 200){
         joystick_x = 200;
     }
-
     int32_t error = joystick_x - (int32_t)encoder_pos;
-
-   // printf("error : %d \r\n", error);
 
     float p_part=k_p * (float)error;
 
@@ -71,7 +63,6 @@ void position_controller(uint32_t encoder_pos, CanMsg* message){
 
     float i_part = k_i * integral;
 
-
     if ((u_prospective < max_output && u_prospective> min_output)||
         (u_prospective >= max_output && error < 0)||
         (u_prospective <= min_output && error > 0)) {
@@ -79,7 +70,6 @@ void position_controller(uint32_t encoder_pos, CanMsg* message){
     }
     const int32_t max_integral = 50;
     const int32_t min_integral = -50;
-
 
     if (integral > max_integral)
     {
@@ -90,15 +80,9 @@ void position_controller(uint32_t encoder_pos, CanMsg* message){
     }
 
     i_part = k_i*integral;
-    
-    
-   // printf("print p part %f \r\n", p_part);
-   // printf("print i part %f \r\n", i_part);
 
     float u = p_part + i_part;
-    
-    printf("U : %f \r\n", u);
-   
+
     pi_motor_set_cdty(u);
 
 }

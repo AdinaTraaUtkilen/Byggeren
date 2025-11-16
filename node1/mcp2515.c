@@ -22,15 +22,17 @@ uint8_t mcp2515_read(uint8_t address){
     spi_deactivate_all();
 
     return data;
- 
 }
+
+
 
 void mcp2515_reset(){
     spi_activate_can_cs();
     spi_master_transmit(0b11000000); // reset command
     spi_deactivate_all();
-
 }
+
+
 
 void mcp2515_write(uint8_t address, uint8_t data){
     spi_activate_can_cs();
@@ -39,7 +41,6 @@ void mcp2515_write(uint8_t address, uint8_t data){
     spi_master_transmit(data);// data
 
     spi_deactivate_all();
-
 }
 
 
@@ -53,6 +54,8 @@ uint8_t read_status(){
     return status;
 }
 
+
+
 void mcp2515_bit_modify(uint8_t address, uint8_t mask, uint8_t new_data){
     spi_activate_can_cs();
     spi_master_transmit(0x05); // bit modify command
@@ -61,13 +64,13 @@ void mcp2515_bit_modify(uint8_t address, uint8_t mask, uint8_t new_data){
     spi_master_transmit(new_data); // data
 
     spi_deactivate_all();
-
 }
+
+
 
 void mcp2515_request_to_send(uint8_t buffer){
     spi_activate_can_cs();
     spi_master_transmit(0b10000000 | buffer); // request to send command
 
     spi_deactivate_all();
-
 }

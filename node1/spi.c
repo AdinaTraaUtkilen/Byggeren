@@ -21,15 +21,16 @@ void spi_master_init(){
 }
 
 
+
 void spi_slave_init(){
     /*Set MOSI til output, all others input*/
     DDRB = (1 << DDB5);
 
     /*Enable SPI */
     SPCR = (1 << SPE);
-
-  
 }
+
+
 
 void spi_master_transmit(char cData){
     /*Start transmission*/
@@ -39,8 +40,9 @@ void spi_master_transmit(char cData){
     while(!(SPSR & (1<<SPIF))){
         (void)SPDR;
     };
-
 }
+
+
 
 //same function but return a value to read
 uint8_t spi_master_transfer(uint8_t cData){
@@ -100,7 +102,6 @@ void spi_activate_can_cs(){
 
 void spi_cd_command(){
     PORTE &= ~(1 << PE2);
-
     DDRE |= (1 << PE2);
 
 }

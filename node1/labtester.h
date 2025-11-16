@@ -22,7 +22,6 @@ void sram_test_func();
 
 void position_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty,pos_t *pos,dir *d, volatile uint8_t *control_flag);
 
-
 void spi_test();
 
 void led_test();

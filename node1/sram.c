@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include "sram.h"
 
+
+
+
 void xmem_init() // from lab lecture
 {
     MCUCR |= (1 << SRE); // enable external memory (XMEM)
@@ -11,21 +14,20 @@ void xmem_init() // from lab lecture
    // SFIOR |= (0 << XMM0);
 }
 
-void xmem_write(uint8_t data, uint16_t addr)
-{
+
+
+void xmem_write(uint8_t data, uint16_t addr){
     volatile char *ext_mem = (char *)external_mem_baseadress;
     ext_mem[addr] = data;
 }
 
-uint8_t xmem_read(uint16_t addr)
-{
+uint8_t xmem_read(uint16_t addr){
     volatile char *ext_mem = (char *)external_mem_baseadress;
     uint8_t ret_val = ext_mem[addr];
     return ret_val;
 }
 
-void SRAM_test(void)
-{
+void SRAM_test(void){
     volatile char *ext_ram = (char *)0x1800; // Start address for the SRAM
     uint16_t ext_ram_size = 0x800;
     uint16_t write_errors = 0;

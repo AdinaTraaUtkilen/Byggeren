@@ -8,7 +8,7 @@
 #include "spi.h"
 #include "global.h"
 
-/* Buttons and led */
+ // Buttons and led */
 
 typedef struct __attribute__((packed)) {
     union {

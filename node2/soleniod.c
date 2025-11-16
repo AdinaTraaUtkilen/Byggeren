@@ -17,7 +17,6 @@ void run_soleniod(CanMsg* message){
     uint8_t btn_pressed = message->byte[4];
    
     if(btn_pressed){
-      //  printf("");
         PIOA -> PIO_CODR = PIO_PA24;
         // aktiv lav litt, pulseee
     }else{

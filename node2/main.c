@@ -1,6 +1,5 @@
 
 
-//#define F_CPU 4915200UL
 #define BAUD 9600
 
 #define F_CPU 84000000
@@ -35,20 +34,18 @@ int main()
     WDT->WDT_MR = WDT_MR_WDDIS; // disable Watchdog Timer
 
     uart_init(F_CPU, BAUD); //bruk ACM1
-
     can_init( init, rxInterrupt);
-
     pwm_driver();
     servo_driver();
     pwm_motor_driver();
     encoder_driver_init();
-   
     ir_init();
-    CanMsg rx;
-    uint8_t rx_ok = 0;
-
     pid_timer_init();
     soleniod_init();
+
+
+    CanMsg rx;
+    uint8_t rx_ok = 0;
 
 
     while (1)
@@ -58,16 +55,12 @@ int main()
         uint32_t encoder_pos = encoder_pos_func(encoder_value);
 
         uint8_t read_can = can_rx(&rx);
-        //printf("encoder %d vs joystick %d \r\n", encoder_pos, rx.byte[0]);
-  
         
         if(read_can){
             if (rx.id == expected_can_id)
             {
                 rx_ok = 1;
                 joystick_to_pwm_servo(&rx);
-              //  can_printmsg(rx);
-              //  printf("\r\n");
                 run_soleniod(&rx);
             } else{
                 can_printmsg(rx);
@@ -89,10 +82,5 @@ int main()
             CanMsg current_ref = rx;
             position_controller(enc, &current_ref);
         }
-
-      
-        
-
-    }
-    
+    }  
 }        

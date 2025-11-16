@@ -6,21 +6,16 @@ void pwm_motor_driver(){ // motor
     PIOB -> PIO_PDR |= PIO_PDR_P12; // disable PIO
     PIOB -> PIO_ABSR |= PIO_ABSR_P12; // AB peripheral select
 
-    
-    // sette frekvens
-    // sette duty cycle
     REG_PWM_CMR0 = PWM_CMR_CPRE_MCK_DIV_32 ; // PWM channel mode reg - left aligned - masterclock/32
     REG_PWM_CPRD0 = 131; // PWM channel period reg
     
     PWM -> PWM_ENA |= PWM_ENA_CHID0; // enable channel 0
-
-    //phase dir pin
-    PMC -> PMC_PCER0  |= (1u << ID_PIOC);
+    PMC -> PMC_PCER0  |= (1u << ID_PIOC);  //phase dir pin
     PIOC -> PIO_PER |= PIO_PC23;
     PIOC -> PIO_OER |= PIO_PC23;  
-
-
 }
+
+
 
 void encoder_driver_init(){
     PMC -> PMC_WPMR = 0x504D4300;
@@ -28,12 +23,10 @@ void encoder_driver_init(){
         printf("Operation not permittted");
     }
 
- //   PMC -> PMC_PCER0 |= (1 << ID_PIOA);
-   // PMC -> PMC_PCER0 |= (1 << ID_PIOC);
+    //PMC -> PMC_PCER0 |= (1 << ID_PIOA);
+    //PMC -> PMC_PCER0 |= (1 << ID_PIOC);
 
-    PMC-> PMC_PCER1 |= (1 << (ID_TC6 - 32)) | (1 << (ID_TC7 - 32)) ;
-
-
+    PMC-> PMC_PCER1 |= (1 << (ID_TC6 - 32)) | (1 << (ID_TC7 - 32));
     PMC -> PMC_PCER0 |= PMC_PCER0_PID29; //klokke for TC28
 
     //sørger for at PA29 ikke driver linja
@@ -49,7 +42,7 @@ void encoder_driver_init(){
 
     REG_TC2_BMR = TC_BMR_QDEN | TC_BMR_POSEN | TC_BMR_EDGPHA ;
 
-    
+
     int32_t last_encoder_value = 10;
     int32_t encoder_value = read_encoder();
 
@@ -66,8 +59,9 @@ void encoder_driver_init(){
 
     TC2 -> TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0;
     TC2 -> TC_CHANNEL[0].TC_CCR = TC_CCR_CLKEN | TC_CCR_SWTRG;
-
 }
+
+
 
 
 uint32_t read_encoder(){
@@ -75,8 +69,10 @@ uint32_t read_encoder(){
     return (uint32_t)(-cv);
 }
 
+
+
+
 void joystick_to_pwm_motor(CanMsg* message){
-    
     uint8_t joystick_x= message->byte[0];
     if (joystick_x < 100){
         PIOC -> PIO_CODR = PIO_PC23; // set dir backwards
@@ -92,9 +88,10 @@ void joystick_to_pwm_motor(CanMsg* message){
     } else {
         REG_PWM_CDTYUPD0 = REG_PWM_CPRD0 - 10;
     }
-
-    
 }
+
+
+
 
 uint32_t encoder_pos_func(int32_t encoder_value){
     int32_t encoder_pos;
@@ -104,9 +101,7 @@ uint32_t encoder_pos_func(int32_t encoder_value){
     } else{
         encoder_pos =  (uint32_t)floorf((float)(encoder_value / 28)); // 5610 / 200 span speed (var 28)
     }
-  //  printf("encoder: %d \r\n", encoder_pos);
     return encoder_pos ;
-
 }
 
 
@@ -122,11 +117,6 @@ void pi_motor_set_cdty(float u)
         PIOC->PIO_CODR = PIO_PC23; // set dir backward
         u = -u;
     }
-   // printf("u : %f \r\n", u);
-
     uint32_t duty =(uint32_t)(u);
-   // printf("dutyyyy %d \r\n", duty);
-   
- 
     REG_PWM_CDTYUPD0 = REG_PWM_CPRD0 - duty;
 }

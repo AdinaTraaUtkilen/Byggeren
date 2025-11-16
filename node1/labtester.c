@@ -19,6 +19,7 @@ void test_uart(){
 }
 
 
+
   //   ---------------------- oving 2 - oppg.1 -----------------------------------
 void manual_latch_test(){ // styrer pinene direkte utifra høy/lav latch
    // setter som output
@@ -34,8 +35,8 @@ void manual_latch_test(){ // styrer pinene direkte utifra høy/lav latch
   PORTE &= ~(1 << PE1); // Le lav, låse verdien
 
   PORTA = 0b10101010; // D endres, Q uendret
-
 }
+
 
 
 
@@ -45,8 +46,8 @@ void sram_test_func(){ // ekstern minne tar over
   SRAM_test();
   volatile uint8_t *ADC_REG = (uint8_t*)0x1400; // peker til adc, hvor a11 er 0
   volatile uint8_t *SRAM_REG = (uint8_t*)0x1800; // peker til stram, hvor a11 er 1, og blir invertert i nand
-
 }
+
 
 
 
@@ -58,9 +59,10 @@ void position_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty,pos_t *pos, d
   pos_calibrate(jx, jy, tx, ty, pos);
    pos_direction(pos, d);
   pos_print(pos, d);
-  
-
 }
+
+
+
 
 // --------------------------  oving 4---------------------------------------
 void spi_test(){
@@ -109,7 +111,6 @@ void led_test(){
 void menu_test(uint8_t *jx,uint8_t *jy,uint8_t *tx,uint8_t *ty, volatile pos_t *pos, volatile dir *d, volatile Buttons *btn, volatile pages *page, volatile homescreen_arrow *arrow){
  position_update(jx,jy,tx,ty,pos, d);
  pos_print(pos, d);
- // printf("side er pa %d \r\n ", *page);
   read_joystick_button(pos);
   update_buttons(btn);
   

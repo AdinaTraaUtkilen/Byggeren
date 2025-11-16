@@ -4,6 +4,9 @@
 #include "util/delay.h"
 
 
+
+
+
 void can_init(){
     mcp2515_reset();
     _delay_ms(50);
@@ -32,17 +35,17 @@ void can_init(){
 
     mcp2515_write(MCP_CNF3, 0x03); // SOF_DISABLE = 0, WAKFIL_DISABLE= 0, 000, PS2 bit lengde= 011 (3 slik at vi får 4)
 
-
     mcp2515_bit_modify(MCP_CANINTF, 0xFF, 0x00); //rydder flagg, alle mask lik 1 og flag = 0
     mcp2515_write(MCP_CANINTE, rx_interrupt); // enable rx interrupts
     
     mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, normal_mode); // CanControll register - normal mode
     mcp2515_bit_modify(MCP_CANSTAT, MODE_MASK, normal_mode); // CanStatus register - normal mode
     
-    
     while (( normal_mode & MODE_MASK ) != MODE_NORMAL ) { ;}
 
 }
+
+
 
 
 
@@ -64,8 +67,9 @@ void can_message_send(can_message *message){
     }
 
     mcp2515_request_to_send(0x01); // buffer 0
-
 }
+
+
 
 bool can_message_receive(can_message *message){ 
     uint8_t intf = mcp2515_read(MCP_CANINTF); //interrupt flag
@@ -96,6 +100,4 @@ bool can_message_receive(can_message *message){
     // Clear interrupt flag
     mcp2515_bit_modify(MCP_CANINTF, 0x01, 0x00);
     return true;
-
-
 }

@@ -1,6 +1,7 @@
 
 #define F_CPU 4915200UL
 
+
 #include "avr/io.h"
 #include "util/delay.h"
 #include "stdio.h"
@@ -27,8 +28,8 @@ volatile uint8_t control_flag = 0;
 volatile Buttons btn;
 volatile homescreen_arrow arrow = PLAY_A;
 volatile pages page = HOME;
-
 volatile uint8_t current_score = 0;
+
 
 
 int main()
@@ -62,8 +63,3 @@ int main()
   return 0;
 };
 
-
-
- /*
-  
- */
